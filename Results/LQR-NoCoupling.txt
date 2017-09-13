@@ -1,3 +1,2 @@
 Network              & Method     & ss-cost    & st-cost              & total cost            & max freq dev.        & max volt. dev.       
 case_illinois200     & lqr-opf    & 51695.17   & 1571.98              & 53267.15              & 0.0117                0.0669              
-case_illinois200     & opf        & 34358.71   & 86284.81             & 120643.52             & 0.0605                0.2986              
