@@ -1,4 +1,4 @@
-function out=workFlow(CaseFile,StControl,LfControl,Alpha)
+function out=workFlow(CaseFile,SsControl,LfControl,Alpha)
 %% Guaranteeing that matpower is on the filepath:
 % The code uses MATPOWER, and it is important to make sure matpower is
 % enabled.
@@ -6,14 +6,20 @@ clc;
 close all;
 CurrentDirectory=pwd;
 cd('..'); 
+
+disp('Configuring MATPOWER'); 
+PreSuccessStr=['.........................................................................'];
+PauseTime=0.5;
 try
 cd('matpower6.0/'); 
 MatPowerDirectory=pwd;
 cd(CurrentDirectory); 
 addpath(MatPowerDirectory); 
-disp('MATPOWER was sucessfully added to the path'); 
+disp([PreSuccessStr,'Successful']); 
+pause(PauseTime);
 catch 
 disp('ERROR: unable to find MATPOWER')
+pause;
 end
 
 
@@ -26,7 +32,7 @@ global ControlMode
 ControlMode=LfControl;
 
 global SteadyStateMode
-SteadyStateMode=StControl;
+SteadyStateMode=SsControl;
 
 
 %% Defining some global variables
@@ -97,9 +103,11 @@ MatPowerOptions=mpoption('out.all',0); % this suppresses MATPOWER print output
 MatPowerOptions = mpoption('model', 'AC', 'pf.alg', 'NR', 'verbose', 0, 'out.all',0); 
 
 %% 1.  Importing the test case
+disp(['Importing ', CaseFile]);
 CaseStr=['casefiles/',CaseFile];
 Network=loadcase(CaseStr);
-
+disp([PreSuccessStr,'Successful']);
+pause(PauseTime);
 % Derive bus admittance matrix and relevant network information
 % N is the number of buses
 % G is the number of generators
@@ -112,6 +120,8 @@ Network=loadcase(CaseStr);
 % LoadSet is the set of loads 
 % Cg is the generator connection matrix
 % YffVec, YftVec, YtfVec, YttVec are branch admittances
+disp('Populating steady-state network parameters');
+
 [ N,G,L,YMat, GMat, BMat,...
     NodeSet, GenSet, LoadSet,...
    Cg, YffVec, YftVec, YtfVec, YttVec] = networkParams( Network );
@@ -144,7 +154,8 @@ for ii=1:NumberOfAreas
 end
 end
 
-
+disp([PreSuccessStr,'Successful']);
+pause(PauseTime);
 
 %% 2.  Populating the initialized steady-state variables from the test case file:
 % we first run an opf to ensure problem is feasible with specified limits
@@ -152,6 +163,7 @@ end
 % Network.bus(:,4)=1.05*Network.bus(:,4);
 % Network.gen(:,9)=1.05*Network.gen(:,9);
 % Network.gen(:,4)=1.05*Network.gen(:,4);
+disp('Running initial load flow to obtain initial algebraic variables'); 
 Network=runpf(Network,MatPowerOptions);
 v0=Network.bus(:,8); % eighth column of bus matrix is voltage magnitude solution
 theta0=degrees2radians(Network.bus(:,9)); % nineth column of bus matrix is voltage phase solution
@@ -166,12 +178,17 @@ a0=[v0;theta0;pg0;qg0];
 Network.gen(:,9)=(max(pg0)+0.00001)*Sbase;
 Network.gen(:,4)=(max(qg0)+0.00001)*Sbase;
 
+
+
+
+
 % Verifying the initial power flow solution:
  [checkpf, checkEqs,realGen_check, reactiveGen_check, ...
     realLoad_check,reactiveLoad_check]=...
    checkPowerFlows(v0,theta0,pg0,qg0, pd0,qd0);
 if checkpf==1
-    disp('Initial power flow solution was correct'); 
+   disp([PreSuccessStr,'Successful']);
+pause(PauseTime);
 else 
     disp('Initial power flow solution was incorrect'); 
     disp('Check case file'); 
@@ -186,9 +203,12 @@ end
 
 
 
+disp('Populating dynamic machine parameters');
 
 
 if isfield(Network,'mac_con')
+    disp('Machine data available');
+
 Sbase2=Network.mac_con(:,3); 
 TauVec=Network.mac_con(:,9);
 XdVec=Network.mac_con(:,6).*Sbase./Sbase2;
@@ -205,7 +225,8 @@ XprimeVec(XprimeVec==0)=mean(XprimeVec(XprimeVec~=0));
 clear Sbase2;
 
 else
-    
+        disp('Machine data not available, Synthetic data is used');
+
 TauVec=repmat(5,G,1);
 XdVec=repmat(0.7,G,1);
 XqVec=repmat(0.7,G,1);
@@ -218,17 +239,22 @@ end
 TchVec=0.1*ones(G,1); 
 FreqRVec=0.01*ones(G,1).*(2*pi); 
 
+   disp([PreSuccessStr,'Successful']);
+pause(PauseTime);
 
 %% 4. Obtain generator internal angles and electromotive force from the power flow solution
 % set starting frequency to nominal value
+disp('Determining initial machine states from initial algebraic values');
 vg0=v0(GenSet);
 thetag0=theta0(GenSet);
 
 [ delta0, e0]=obtainGenStates(vg0, thetag0, pg0, qg0 );
 omega0=repmat(OMEGAS,G,1); % creating a vector of OMEGAS of size(G,1), for all generator nodes.
-
+   disp([PreSuccessStr,'Successful']);
+pause(PauseTime);
 
 %% 5.  Obtaining generator steady-state controls from the power flow solutions and steady-state of states
+disp('Determining intial control inputs from initial load flow and state values');
 [m0,f0]=obtainGenControls(delta0,omega0,e0,vg0,thetag0,pg0,qg0, OMEGAS);
 x0=[delta0;omega0;e0;m0];
 pref0=m0;
@@ -236,6 +262,8 @@ if strcmp(ControlMode,'AGC')
 y0=zeros(G,1); 
 end
 u0=[pref0;f0];
+   disp([PreSuccessStr,'Successful']);
+pause(PauseTime);
 %% 6.  Defining the indices of vector z for dynamical simulation:
 % *****states*****x
 % delta size(G,1)
@@ -282,12 +310,13 @@ PertSet=find(or(Network.bus(:,3)>0, Network.bus(:,4)>0));
 PPertValues=PRatio*pd0(PertSet);
 QPertValues=QRatio*qd0(PertSet); 
 NoiseVarianceSet=0*Network.bus(:,3)/Sbase;
-for jj=1:length(PertSet)
-   MessageSTR=['Real and reactive power consumption of bus No. ', num2str(PertSet(jj)), ' respectively perturbed by ',...
-       num2str(PPertValues(jj)), ' puWatts.', ' and ',  num2str(QPertValues(jj)), ' puVars.']; 
-   disp(MessageSTR);
-    pause(0.03); 
-end
+% for jj=1:length(PertSet)
+% %    MessageSTR=['Modified (Pd,Qd) Bus ', num2str(PertSet(jj)), ' by ',...
+% %        num2str(PPertValues(jj)), '+j',  num2str(QPertValues(jj)), 'pu']; 
+%    disp(MessageSTR);
+%     pause(0.3); 
+% end
+disp(['Modifying (Pd,Qd) at all buses by ', num2str(PRatio*100), 'Percent with PF=0.9']);
 
 % new steady-state conditions
 [pdS,qdS]=loadPert('Steady-State',[],pd0,qd0,PertSet,PPertValues,QPertValues,[],[],[]);
@@ -295,6 +324,8 @@ end
 NetworkS=Network;
 NetworkS.bus(:,3)= pdS.*Sbase; 
 NetworkS.bus(:,4)=qdS.*Sbase; 
+   disp([PreSuccessStr,'Successful']);
+pause(PauseTime);
  NetworkS.branch(:,[6 7 8])=0; % flow limits are set to zero
  %% 8. Setting LQR parameters
 % alpha=0.8;
@@ -303,53 +334,82 @@ Tlqr=1000;
 
 %% 9.  Solving the augmentedOPF for the next time-slot
 % setting matpower options need in subsequent load-flow
-
-if strcmp(SteadyStateMode,'LQR-OPF')
-    % to obtain Vg, pgS, qgS
-dpgS=pdS(GenSet)-pd0(GenSet);
-dqdgS=qdS(GenSet)-qd0(GenSet);
-dpdlS=pdS(LoadSet)-pd0(LoadSet);
-dqdlS=qdS(LoadSet)-qd0(LoadSet);
-[vgS,pgSNonSlack, thetaSSlack,CompTime,~,~, ~] = ...
-    augmentedOPF( delta0, omega0, e0, m0, v0, theta0, pg0, qg0, pref0, f0,...
+disp(['Steady state optimization requested is ', SteadyStateMode]);
+disp(['Running ', SteadyStateMode]);
+switch SteadyStateMode
+    case 'OPF'
+            TStart=tic;
+  [NetworkS, SuccessFlag]=  runopf(NetworkS,MatPowerOptions);
+  CompTime=toc(TStart);      
+  
+    case 'LQR-OPF'
+               TStart=tic;
+         [vgS,pgSNonSlack, thetaSSlack,~,~, ~] = ...
+              LQROPF( delta0, omega0, e0, m0, v0, theta0, pg0, qg0, pref0, f0,...
     NetworkS,...
-    dpgS,dqdgS,dpdlS,dqdlS,Alpha); 
-NetworkS.gen(:,6)=vgS;
+   pdS,qdS,pd0,qd0,Alpha); 
+[NetworkS,SuccessFlag]=runpf(NetworkS,MatPowerOptions);
+         CompTime=toc(TStart);
+    case 'ALQR-OPF'
+          TStart=tic;
+            [vgS,pgSNonSlack, thetaSSlack,~,~, ~] = ...
+              ALQROPF( delta0, omega0, e0, m0, v0, theta0, pg0, qg0, pref0, f0,...
+    NetworkS,...
+    pdS,qdS,pd0,qd0,Alpha); 
+        NetworkS.gen(:,6)=vgS;
 NetworkS.gen(GenNonSlackSet,2)=pgSNonSlack.*Sbase;
 NetworkS.bus(NetworkS.bus(:,2)==3,9)=radians2degrees(thetaSSlack);
-% run matpower power flow:
 [NetworkS,SuccessFlag]=runpf(NetworkS,MatPowerOptions);
-elseif strcmp(SteadyStateMode,'OPF')
-    TStart=tic;
-  [NetworkS, SuccessFlag]=  runopf(NetworkS,MatPowerOptions);
   CompTime=toc(TStart);
-end    
+    case 'DLQR-OPF'
+
+
+end
+% run matpower power flow:
+  if SuccessFlag==1
+         disp([PreSuccessStr,'Successful']);
+               disp(['Steady state optimization ', SteadyStateMode, ' took ', num2str(CompTime), ' Seconds']);
+pause(PauseTime);
+  else
+      disp([PreSuccessStr,'Failed!!']);
+               disp(['Steady state optimization ', SteadyStateMode, ' Failed']);
+pause;
+  end
 
 %% 10. Obtain a true equilibrium for the next time-slot
+disp(['Retrieiving new steady-state algebraic variables']); 
 vS= NetworkS.bus(:,8);
 vgS=vS(GenSet);
 thetaS= degrees2radians(NetworkS.bus(:,9));
 thetagS=thetaS(GenSet); 
 pgS=NetworkS.gen(:,2)./Sbase; 
 qgS=NetworkS.gen(:,3)./Sbase;
-aS=[vS;thetaS;pgS;qgS];
+% aS=[vS;thetaS;pgS;qgS];
 [ SsCost ] = steadyStateCost(pgS, NetworkS);
-    
+          disp([PreSuccessStr,'Successful']);
+   pause(PauseTime);
+
 
 
 % check new power flow
+    disp('Checking whether new steady-state satisfies load flow'); 
  [checkpf2, checkEqs2,realGen_check2, reactiveGen_check2, ...
     realLoad_check2,reactiveLoad_check2]=...
    checkPowerFlows(vS,thetaS,pgS,qgS, pdS,qdS);
 
 if checkpf2==1
-    disp('The power flow solution for the second time slot is correct'); 
+
+        disp([PreSuccessStr,'Successful']);
+   pause(PauseTime);
 else 
     disp('The power flow solution for the second time slot in incorrect'); 
     disp('Check the new network conditions and MATPOWER runpf successflag'); 
     pause;
 end
 
+
+
+disp('Determining new machine states from new algebraic values');
 [ deltaS,eS]=obtainGenStates(vgS, thetagS, pgS, qgS );
 omegaS=repmat(OMEGAS,G,1);
 
@@ -555,265 +615,21 @@ end
 % 
 cd(CaseFile);
 
-if exist(StControl)~=7
-    mkdir(StControl);
+if exist(SsControl)~=7
+    mkdir(SsControl);
 end
 % 
-cd(StControl);
+cd(SsControl);
 % 
 if exist(LfControl)~=7
     mkdir(LfControl);
 end
 % 
 cd(LfControl)
-savename=[CaseFile,'_',StControl,'_',LfControl,'alphapoint',num2str(ceil(Alpha*10))];
+savename=[CaseFile,'_',SsControl,'_',LfControl,'alphapoint',num2str(ceil(Alpha*10))];
 save(savename); 
 
-outname=['Results/',CaseFile,'/',StControl,'/',LfControl,'/',savename];
+outname=['Results/',CaseFile,'/',SsControl,'/',LfControl,'/',savename];
 out=load(outname);
-% 
-% 
-% 
-% 
-% 
-% if exist('figures')~=7
-%     mkdir('figures');
-% end
-% cd('figures'); 
-% % plots
-% figx0=0;
-% figy0=1;
-% width=8;
-% height=5;
-% % 
-% % 
-% 
-% % set(0,'DefaultFigureVisible','off'); % suppressing pop-up figure windows
-% freqyMin=min(min(omegaVec))./(2*pi);
-% freqyMax=max(max(omegaVec))./(2*pi);
-% freqyOffSet=0;
-% figure1=figure('Units','inches',...
-% 'Position',[figx0 figy0 width height],...
-% 'PaperPositionMode','auto');
-% set(figure1, 'Name', 'genfreq');
-% plot(t,omegaVec./(2*pi),'lineWidth',2);
-%  xlabel('Time (sec)', 'FontWeight','bold');
-%  ylabel('$\frac{1}{2\pi}\boldmath{\omega}$ (Hz)'); 
-% axis([0 Tfinal freqyMin-freqyOffSet freqyMax+freqyOffSet]);
-% set(gca,'box','on');
-% set(gca,'fontSize',22); 
-% set(0,'defaulttextinterpreter','latex')
-%  grid on;
-% title(' Generator Frequencies'); 
-%   print -dpdf freq.pdf
-% print -depsc2 freq
-% % 
-% % 
-% % 
-% % 
-% % 
-% % 
-% angleyMin=min(min(deltaVec));
-% angleyMax=max(max(deltaVec));
-% angleyOffSet=0;
-% figure1=figure('Units','inches',...
-% 'Position',[figx0 figy0 width height],...
-% 'PaperPositionMode','auto');
-% set(figure1, 'Name', 'genangle');
-% plot(t,deltaVec,'lineWidth',2);
-%  xlabel('Time (sec)', 'FontWeight','bold');
-%  ylabel('$\boldmath{\delta}$ (Rad)'); 
-% axis([0 Tfinal angleyMin-angleyOffSet angleyMax+angleyOffSet]);
-% set(gca,'box','on');
-% set(gca,'fontSize',22); 
-% set(0,'defaulttextinterpreter','latex')
-%  grid on;
-% title('Generator angles'); 
-%   print -dpdf angles.pdf
-% print -depsc2 angles
-% 
-% 
-% 
-% 
-% eyMin=min(min(eVec));
-% eyMax=max(max(eVec));
-% eyOffSet=0;
-% figure1=figure('Units','inches',...
-% 'Position',[figx0 figy0 width height],...
-% 'PaperPositionMode','auto');
-% set(figure1, 'Name', 'gene');
-% plot(t,eVec,'lineWidth',2);
-%  xlabel('Time (sec)', 'FontWeight','bold');
-%  ylabel('$\boldmath{e}$ (pu)'); 
-% axis([0 Tfinal eyMin-eyOffSet eyMax+eyOffSet]);
-% set(gca,'box','on');
-% set(gca,'fontSize',22); 
-% set(0,'defaulttextinterpreter','latex')
-%  grid on;
-% title('Generator angles'); 
-%   print -dpdf e.pdf
-% print -depsc2 e
-% 
-% 
-% myMin=min(min(mVec));
-% myMax=max(max(mVec));
-% myOffSet=0;
-% figure1=figure('Units','inches',...
-% 'Position',[figx0 figy0 width height],...
-% 'PaperPositionMode','auto');
-% set(figure1, 'Name', 'gene');
-% plot(t,mVec,'lineWidth',2);
-%  xlabel('Time (sec)', 'FontWeight','bold');
-%  ylabel('$\boldmath{m}$ (pu)'); 
-% axis([0 Tfinal myMin-myOffSet myMax+myOffSet]);
-% set(gca,'box','on');
-% set(gca,'fontSize',22); 
-% set(0,'defaulttextinterpreter','latex')
-%  grid on;
-% title('Generator angles'); 
-%   print -dpdf m.pdf
-% print -depsc2 m
-% 
-% % 
-% % 
-% % 
-% % 
-% %     
-% vyMin=min(min(vVec));
-% vyMax=max(max(vVec));
-% vyOffSet=0;
-% figure1=figure('Units','inches',...
-% 'Position',[figx0 figy0 width height],...
-% 'PaperPositionMode','auto');
-% set(figure1, 'Name', 'Voltage mags');
-% plot(t,vVec,'lineWidth',2);
-%  xlabel('Time (sec)', 'FontWeight','bold');
-%  ylabel('$\boldmath{v}$ (pu)'); 
-% axis([0 Tfinal vyMin-vyOffSet vyMax+vyOffSet]);
-% set(gca,'box','on');
-% set(gca,'fontSize',22); 
-% set(0,'defaulttextinterpreter','latex')
-%  grid on;
-% title('Generator angles'); 
-%   print -dpdf VoltageMags.pdf
-% print -depsc2 VoltageMags
-% 
-% 
-% 
-% thetayMin=min(min(thetaVec));
-% thetayMax=max(max(thetaVec));
-% thetayOffSet=0;
-% figure1=figure('Units','inches',...
-% 'Position',[figx0 figy0 width height],...
-% 'PaperPositionMode','auto');
-% set(figure1, 'Name', 'voltage angles');
-% plot(t,thetaVec,'lineWidth',2);
-%  xlabel('Time (sec)', 'FontWeight','bold');
-%  ylabel('$\boldmath{\theta}$ (Rad)'); 
-% axis([0 Tfinal thetayMin-thetayOffSet thetayMax+thetayOffSet]);
-% set(gca,'box','on');
-% set(gca,'fontSize',22); 
-% set(0,'defaulttextinterpreter','latex')
-%  grid on;
-% title('Generator angles'); 
-%   print -dpdf VoltageAngles.pdf
-% print -depsc2 VoltageAngles
-% 
-% 
-% 
-% 
-% 
-% pgyMin=min(min(pgVec));
-% pgyMax=max(max(pgVec));
-% pgyOffSet=0;
-% figure1=figure('Units','inches',...
-% 'Position',[figx0 figy0 width height],...
-% 'PaperPositionMode','auto');
-% set(figure1, 'Name', 'voltage angles');
-% plot(t,pgVec,'lineWidth',2);
-%  xlabel('Time (sec)', 'FontWeight','bold');
-%  ylabel('$\boldmath{pg}$ (pu)'); 
-% axis([0 Tfinal pgyMin-pgyOffSet pgyMax+pgyOffSet]);
-% set(gca,'box','on');
-% set(gca,'fontSize',22); 
-% set(0,'defaulttextinterpreter','latex')
-%  grid on;
-% title('Generated power'); 
-%   print -dpdf pg.pdf
-% print -depsc2 pg
-% 
-% 
-% 
-% qgyMin=min(min(qgVec));
-% qgyMax=max(max(qgVec));
-% qgyOffSet=0;
-% figure1=figure('Units','inches',...
-% 'Position',[figx0 figy0 width height],...
-% 'PaperPositionMode','auto');
-% set(figure1, 'Name', 'pg');
-% plot(t,qgVec,'lineWidth',2);
-%  xlabel('Time (sec)', 'FontWeight','bold');
-%  ylabel('$\boldmath{qg}$ (pu)'); 
-% axis([0 Tfinal qgyMin-qgyOffSet qgyMax+qgyOffSet]);
-% set(gca,'box','on');
-% set(gca,'fontSize',22); 
-% set(0,'defaulttextinterpreter','latex')
-%  grid on;
-% title('Reactive powers'); 
-%   print -dpdf qg.pdf
-% print -depsc2 qg
-% 
-% 
-% 
-% 
-% 
-% 
-% prefyMin=min(min(prefVec));
-% prefyMax=max(max(prefVec));
-% prefyOffSet=0;
-% figure1=figure('Units','inches',...
-% 'Position',[figx0 figy0 width height],...
-% 'PaperPositionMode','auto');
-% set(figure1, 'Name', 'pg');
-% plot(t,prefVec,'lineWidth',2);
-%  xlabel('Time (sec)', 'FontWeight','bold');
-%  ylabel('$\boldmath{pref}$ (pu)'); 
-% axis([0 Tfinal prefyMin-prefyOffSet prefyMax+prefyOffSet]);
-% set(gca,'box','on');
-% set(gca,'fontSize',22); 
-% set(0,'defaulttextinterpreter','latex')
-%  grid on;
-% title('Generator reference'); 
-%   print -dpdf pref.pdf
-% print -depsc2 pref
-% 
-% 
-% 
-% fyMin=min(min(fVec));
-% fyMax=max(max(fVec));
-% fyOffSet=0;
-% figure1=figure('Units','inches',...
-% 'Position',[figx0 figy0 width height],...
-% 'PaperPositionMode','auto');
-% set(figure1, 'Name', 'pg');
-% plot(t,fVec,'lineWidth',2);
-%  xlabel('Time (sec)', 'FontWeight','bold');
-%  ylabel('$\boldmath{f}$ (pu)'); 
-% axis([0 Tfinal fyMin-fyOffSet fyMax+fyOffSet]);
-% set(gca,'box','on');
-% set(gca,'fontSize',22); 
-% set(0,'defaulttextinterpreter','latex')
-%  grid on;
-% title('Generator emf'); 
-%   print -dpdf f.pdf
-% print -depsc2 f
-% 
-% 
-% 
-%    
-% get(0, 'DefaultFigureVisible');
-% set(0, 'DefaultFigureVisible', 'on');
 cd(CurrentDirectory);
-% end
-% 
 

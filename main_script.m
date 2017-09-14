@@ -14,20 +14,22 @@ casefiles={'case_illinois200'};
 
 
 % Coupling parameter
-Alpha=0.8;
+Alpha=0;
 
 % LQR time importance
 Tlqr=1000;
 
+LfControl='LQR';
+StControlOptions={'LQR-OPF', 'ALQR-OPF','DLQR-OPF','OPF'};
 
-lfcontrol='LQR';
+
 mkdir('Results');
 fileID=fopen('Results/LQR-NoCoupling.txt','w'); 
 fprintf(fileID,'%-20s & %-10s & %-10s & %-20s & %-20s  & %-20s & %-20s \n',...
     'Network', 'Method', 'ss-cost', 'st-cost', 'total cost', 'max freq dev.', 'max volt. dev.');
 for case_index=1:length(casefiles)
     casefile=casefiles{case_index};
-    lqropf=workflow(casefile,'LQR-OPF',lfcontrol,Alpha);
+    lqropf=workflow(casefile,'ALQR-OPF',LfControl,Alpha);
         if lqropf.N<250
             fprintf(fileID, '%-20s & %-10s & %-10.2f & %-20.2f & %-20.2f  & %-20.4f  %-20.4f\n', ...
     casefile, 'lqr-opf', lqropf.SsCost, lqropf.TrCost, lqropf.SsCost+lqropf.TrCost, ...
@@ -37,7 +39,7 @@ for case_index=1:length(casefiles)
                casefile, 'lqr-opf', lqropf.SsCost, lqropf.TrCostEstimate, lqropf.SsCost+lqropf.TrCostEstimate, ...
    '----', '----'); 
         end
-     opf=workflow(casefile,'OPF',lfcontrol,Alpha);
+     opf=workflow(casefile,'OPF',LfControl,Alpha);
     if lqropf.N<250
             fprintf(fileID, '%-20s & %-10s & %-10.2f & %-20.2f & %-20.2f  & %-20.4f  %-20.4f\n', ...
     casefile, 'opf', opf.SsCost, opf.TrCost, opf.SsCost+opf.TrCost, ...
