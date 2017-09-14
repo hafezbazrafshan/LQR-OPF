@@ -6,30 +6,19 @@ clc;
 % Network names
 % casefiles={'case9wmac_con'; 'case14wmac_con';'case39wmac_con','case57','case_illinois200'};
 % casefiles={'case39wmac_con'};
-casefiles={'case_illinois200'};
+% casefiles={'case_illinois200'};
 
 
 % casefiles={'case57'};
 % casefiles={'case9wmac_con'};
 
 
-% Coupling parameter
-Alpha=0;
-
-% LQR time importance
-Tlqr=1000;
-
-LfControl='LQR';
-StControlOptions={'LQR-OPF', 'ALQR-OPF','DLQR-OPF','OPF'};
 
 
-mkdir('Results');
-fileID=fopen('Results/LQR-NoCoupling.txt','w'); 
-fprintf(fileID,'%-20s & %-10s & %-10s & %-20s & %-20s  & %-20s & %-20s \n',...
-    'Network', 'Method', 'ss-cost', 'st-cost', 'total cost', 'max freq dev.', 'max volt. dev.');
+
 for case_index=1:length(casefiles)
     casefile=casefiles{case_index};
-    lqropf=workflow(casefile,'ALQR-OPF',LfControl,Alpha);
+    lqropf=workflow(casefile,'ALQR-OPF',LfControl,Alpha, 'WithPlots');
         if lqropf.N<250
             fprintf(fileID, '%-20s & %-10s & %-10.2f & %-20.2f & %-20.2f  & %-20.4f  %-20.4f\n', ...
     casefile, 'lqr-opf', lqropf.SsCost, lqropf.TrCost, lqropf.SsCost+lqropf.TrCost, ...

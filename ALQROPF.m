@@ -139,10 +139,9 @@ fs=us(fIdx);
 
 SsCost=steadyStateCost(pgs,NetworkS);
 
-minimize( SsCost+ (Tlqr)*quad_form((xs-x0),RiccatiS))
+minimize( SsCost+ (Tlqr/2)*quad_form((xs-x0),RiccatiS))
 subject to:
 omegas==omega0;
--pi<=thetas<=pi;
 zeros(4*G,1) == gx*(xs-x0)+ga*(as-a0)+gu*(us-u0);
 deltaD==hx*(xs-x0)+ha*(as-a0);
 NetworkS.bus(:,13)<= vs<=NetworkS.bus(:,12);
@@ -158,7 +157,7 @@ thetas(SlackIdx)==theta0(SlackIdx);
 cvx_end
 
 
-% solve CARE at z0
+% solve CARE at zS
 [Qinv,Rinv]=QinvRinv(pgs,qgs,Alpha, speye(4*G), speye(2*G),NetworkS); 
 [RiccatiS,EigValues,FeedBackGain,Report]=care(Asys,Bsys,mldivide(Qinv,speye(size(Qinv))),mldivide(Rinv,speye(size(Rinv))));
 
@@ -170,7 +169,7 @@ RiccatiSVec(:,1)=RiccatiS(:);
 KVec(:,1)=-FeedBackGain(:);
 SsCostVec(:,1)=steadyStateCost(pgs,NetworkS);
 GammaVec(:,1)=quad_form((xs-x0),RiccatiS);
-TrCostEstimateVec(:,1)=(Tlqr)*GammaVec(:,1);
+TrCostEstimateVec(:,1)=(Tlqr/2)*GammaVec(:,1);
 ObjValue(1)=SsCostVec(:,1)+TrCostEstimateVec(:,1);
 ItSuccess=1;
 BestIt=1;
@@ -180,7 +179,7 @@ BestIt=1;
   K=-FeedBackGain;
 SsCost=steadyStateCost(pgs,NetworkS);
 Gamma=quad_form((xs-x0),RiccatiS);
-TrCostEstimate=Tlqr*Gamma;
+TrCostEstimate=(Tlqr/2)*Gamma;
 
 vgS=vs(GenSet);
 pgSNonSlack=pgs(GenNonSlackSet);
@@ -216,10 +215,10 @@ fs=us(fIdx);
 
 SsCost=steadyStateCost(pgs,NetworkS);
 
-minimize( SsCost+ (Tlqr)*quad_form((xs-x0),RiccatiS))
+minimize( SsCost+ (Tlqr/2)*quad_form((xs-x0),RiccatiS))
 subject to:
 omegas==omega0;
--pi<=thetas<=pi;
+% -pi<=thetas<=pi;
 zeros(4*G,1) == gx*(xs-x0)+ga*(as-a0)+gu*(us-u0);
 deltaD==hx*(xs-x0)+ha*(as-a0);
 NetworkS.bus(:,13)<= vs<=NetworkS.bus(:,12);
@@ -245,7 +244,7 @@ RiccatiSVec(:,ItNo)=RiccatiS(:);
 KVec(:,ItNo)=-FeedBackGain(:);
 SsCostVec(:,ItNo)=steadyStateCost(pgs,NetworkS);
 GammaVec(:,ItNo)=quad_form((xs-x0),RiccatiS);
-TrCostEstimateVec(:,ItNo)=(Tlqr)*GammaVec(:,ItNo);
+TrCostEstimateVec(:,ItNo)=(Tlqr/2)*GammaVec(:,ItNo);
 ObjValue(ItNo)=SsCostVec(:,ItNo)+TrCostEstimateVec(:,ItNo);
 
 str=['ObjValue of Alternate minimization at Iter No. ', num2str(ItNo), ' is ', num2str(ObjValue(ItNo)),'\n'];
@@ -260,7 +259,7 @@ if ObjValue(ItNo)<ObjValue(BestIt)
 
 SsCost=steadyStateCost(pgs,NetworkS);
 Gamma=quad_form((xs-x0),RiccatiS);
-TrCostEstimate=Tlqr*Gamma;
+TrCostEstimate=(Tlqr/2)*Gamma;
 
 vgs=vs(GenSet);
 pgsNonSlack=pgs(GenNonSlackSet);
@@ -275,20 +274,20 @@ end
 
 
 
-figureAlt=figure('Units','inches',...
- 'Position',[0 1 8 4],...
- 'PaperPositionMode','auto');
- set(figureAlt, 'Name', 'Alt. Min. Progress');
-plot(1:1:MaxIt, ObjValue(1:1:ItSuccess),'o--');
-  xlabel('It.', 'FontWeight','bold');
-  ylabel('Obj. Value'); 
- 
- set(gca, 'XTick',[1:1:MaxIt]);
- set(gca,'box','on');
- set(gca,'fontSize',22); 
- set(gca,'defaulttextinterpreter','latex')
- grid on;
- title('Alt. Min. Progress'); 
+% figureAlt=figure('Units','inches',...
+%  'Position',[0 1 8 4],...
+%  'PaperPositionMode','auto');
+%  set(figureAlt, 'Name', 'Alt. Min. Progress');
+% plot(1:1:MaxIt, ObjValue(1:1:ItSuccess),'o--');
+%   xlabel('It.', 'FontWeight','bold');
+%   ylabel('Obj. Value'); 
+%  
+%  set(gca, 'XTick',[1:1:MaxIt]);
+%  set(gca,'box','on');
+%  set(gca,'fontSize',22); 
+%  set(gca,'defaulttextinterpreter','latex')
+%  grid on;
+%  title('Alt. Min. Progress'); 
 
 
 end

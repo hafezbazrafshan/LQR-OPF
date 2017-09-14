@@ -1,4 +1,4 @@
-function out=workFlow(CaseFile,SsControl,LfControl,Alpha)
+function out=workFlow(CaseFile,SsControl,LfControl,Alpha, varargin)
 %% Guaranteeing that matpower is on the filepath:
 % The code uses MATPOWER, and it is important to make sure matpower is
 % enabled.
@@ -6,6 +6,10 @@ clc;
 close all;
 CurrentDirectory=pwd;
 cd('..'); 
+YesPlots=false;
+if length(varargin)>0
+    YesPlots=true;
+end
 
 disp('Configuring MATPOWER'); 
 PreSuccessStr=['.........................................................................'];
@@ -173,10 +177,21 @@ pd0=Network.bus(:,3)./Sbase; % third column of bus matrix is real power demand
 qd0=Network.bus(:,4)./Sbase; % fourth column of bus matrix is reactive power demand
 a0=[v0;theta0;pg0;qg0];
 
+
 % we increase the maximum limit on active and reactive power generation by
 % a little bit to ensure feasibility
-Network.gen(:,9)=(max(pg0)+0.00001)*Sbase;
-Network.gen(:,4)=(max(qg0)+0.00001)*Sbase;
+if sum(pg0.*Sbase>Network.gen(:,9))>0
+    Index=find(pg0.*Sbase>Network.gen(:,9));
+    Network.gen(Index,9)=1.02*pg0(Index)*Sbase;
+end
+
+if sum(qg0.*Sbase>Network.gen(:,4))>0
+    Index=find(qg0.*Sbase>Network.gen(:,4));
+    Network.gen(Index,4)=1.02*qg0(Index)*Sbase;
+end
+
+
+
 
 
 
@@ -230,7 +245,7 @@ else
 TauVec=repmat(5,G,1);
 XdVec=repmat(0.7,G,1);
 XqVec=repmat(0.7,G,1);
-XprimeVec=repmat(0.1,G,1);
+XprimeVec=repmat(0.07,G,1);
 DVec=zeros(G,1);
 MVec=0.3*repmat(1,G,1);
     
@@ -340,6 +355,8 @@ switch SteadyStateMode
     case 'OPF'
             TStart=tic;
   [NetworkS, SuccessFlag]=  runopf(NetworkS,MatPowerOptions);
+  [NetworkS,SuccessFlag]=runpf(NetworkS,MatPowerOptions);
+
   CompTime=toc(TStart);      
   
     case 'LQR-OPF'
@@ -348,6 +365,9 @@ switch SteadyStateMode
               LQROPF( delta0, omega0, e0, m0, v0, theta0, pg0, qg0, pref0, f0,...
     NetworkS,...
    pdS,qdS,pd0,qd0,Alpha); 
+NetworkS.gen(:,6)=vgS;
+NetworkS.gen(GenNonSlackSet,2)=pgSNonSlack.*Sbase;
+NetworkS.bus(NetworkS.bus(:,2)==3,9)=radians2degrees(thetaSSlack);
 [NetworkS,SuccessFlag]=runpf(NetworkS,MatPowerOptions);
          CompTime=toc(TStart);
     case 'ALQR-OPF'
@@ -416,25 +436,34 @@ omegaS=repmat(OMEGAS,G,1);
 % Obtaining generator steady-state controls
 [mS,fS]=obtainGenControls( deltaS,omegaS,eS,vgS,thetagS,pgS,qgS, OMEGAS);
 prefS=mS;
-xS=[deltaS;omegaS;eS;mS];
-uS=[prefS;fS];
 
 
 
 %% Run new LQR with setpoints determined to reach the true equilibrium
+% 
+% [KLQRstep,TrCostEstimate,Gamma] = LQRstep( deltaS, omegaS, eS, mS, ...
+%     vS, thetaS, pgS, qgS, ...
+%     prefS, fS,...
+%     delta0, omega0, e0, m0, ...
+%     v0, theta0, pg0, qg0, ...
+%     pref0, f0, ...
+%     Alpha,NetworkS);
 
-% [KLQRstep,trCost2,gammaEstimate] = LQRstep( zS, z0,alpha,networkS); the
-% output has been verified to be identical to LQRstepCARE (for case9 and
-% case39)
-% Also, trCost2=gammaEstimate 
-
-[KLQRstep,TrCostEstimate,Gamma] = LQRstepCARE( deltaS, omegaS, eS, mS, ...
+[KLQRstep,TrCostEstimate,Gamma, Asys, Bsys] = LQRstepCARE( deltaS, omegaS, eS, mS, ...
     vS, thetaS, pgS, qgS, ...
     prefS, fS,...
     delta0, omega0, e0, m0, ...
     v0, theta0, pg0, qg0, ...
     pref0, f0, ...
     Alpha,NetworkS);
+MaxEigen=max(real(eig(full(Asys))));
+if MaxEigen<0.01
+    disp('System is automatically stable'); 
+    pause;
+else
+    disp(['Max. eigen value is ', num2str(MaxEigen)]);
+    pause(PauseTime);
+end
 
 %  12. Define the MASS matrix (The E matrix in $E\dot{x}$ descriptor systems)
 if strcmp(ControlMode,'LQR')
@@ -512,11 +541,11 @@ end
 % % 
 % % First
 if N<250
+    disp('Solving for the 0plus initial conditions using levenberg-marquardt');
 InitialOptions= optimoptions('fsolve','Display','Iter','Algorithm','levenberg-marquardt','InitDamping',0.5, 'ScaleProblem','jacobian',...
-    'SpecifyObjectiveGradient',true,'MaxIterations',50,'MaxFunctionEvaluations',50,'OptimalityTolerance',1e-6,...
-    'PlotFcn',@optimplotfval);
+    'SpecifyObjectiveGradient',true,'MaxIterations',50,'MaxFunctionEvaluations',50,'OptimalityTolerance',1e-6);
 
-[a0Plus]=fsolve(@( a) hTildeAlgebraicFunctionVectorized(...
+[a0Plus,Res0Plus, exitflag]=fsolve(@( a) hTildeAlgebraicFunctionVectorized(...
     delta0Plus,omega0Plus,e0Plus,m0Plus, ...
     a(vIdx), a(thetaIdx), a(pgIdx), a(qgIdx),...
   d0Plus), [v0;theta0;pg0;qg0],InitialOptions);
@@ -527,25 +556,35 @@ theta0Plus=a0Plus(thetaIdx);
 pg0Plus=a0Plus(pgIdx); 
 qg0Plus=a0Plus(qgIdx);
 
-
-InitialOptions= optimoptions('fsolve','Display','Iter','Algorithm','trust-region','InitDamping',0.1, 'ScaleProblem','jacobian',...
-    'SpecifyObjectiveGradient',true,'MaxIterations',100000,'MaxFunctionEvaluations',50000,'OptimalityTolerance',1e-6,...
-    'PlotFcn',@optimplotfval);
-[a0Plus]=fsolve(@( a) hTildeAlgebraicFunctionVectorized(...
-    delta0Plus,omega0Plus,e0Plus,m0Plus, ...
-    a(vIdx), a(thetaIdx), a(pgIdx), a(qgIdx),...
-  d0Plus), a0Plus,InitialOptions);
-v0Plus=a0Plus(vIdx);
-theta0Plus=a0Plus(thetaIdx); 
-pg0Plus=a0Plus(pgIdx); 
-qg0Plus=a0Plus(qgIdx);
+if exitflag
+   disp([PreSuccessStr,'Successful']);
+   pause(PauseTime);
+else
+        disp([PreSuccessStr,'Failed!!']);
+pause;
+end
+% InitialOptions= optimoptions('fsolve','Display','Iter','Algorithm','trust-region','InitDamping',0.1, 'ScaleProblem','jacobian',...
+%     'SpecifyObjectiveGradient',true,'MaxIterations',100000,'MaxFunctionEvaluations',50000,'OptimalityTolerance',1e-6,...
+%     'PlotFcn',@optimplotfval);
+% [a0Plus]=fsolve(@( a) hTildeAlgebraicFunctionVectorized(...
+%     delta0Plus,omega0Plus,e0Plus,m0Plus, ...
+%     a(vIdx), a(thetaIdx), a(pgIdx), a(qgIdx),...
+%   d0Plus), a0Plus,InitialOptions);
+% v0Plus=a0Plus(vIdx);
+% theta0Plus=a0Plus(thetaIdx); 
+% pg0Plus=a0Plus(pgIdx); 
+% qg0Plus=a0Plus(qgIdx);
 % 
 % 
+% [ deltaDot0Plus, omegaDot0Plus, eDot0Plus, mDot0Plus ] = gTildeFunctionVectorized(...
+%     delta0Plus, omega0Plus, e0Plus,m0Plus,...
+%      v0Plus,theta0Plus,pg0Plus,qg0Plus);
 [ deltaDot0Plus, omegaDot0Plus, eDot0Plus, mDot0Plus ] = gTildeFunctionVectorized(...
     delta0Plus, omega0Plus, e0Plus,m0Plus,...
      v0Plus,theta0Plus,pg0Plus,qg0Plus);
 %  
 % 
+disp('Running dynamical simulations');
 DynamicSolverOptions.Jacobian=@dynamicsJacobian; % this is for the ode solver
 Znew0=[delta0Plus; omega0Plus; e0Plus; m0Plus; v0Plus; theta0Plus; pg0Plus; qg0Plus];
 ZDot0Plus=zeros(size(Znew0));
@@ -556,11 +595,12 @@ DynamicSolverOptions.InitialSlope=ZDot0Plus;
 % 
 % %%
 
-disp('Running stabilityOPF dynamics'); 
-[~,ZNEW]=ode15s(@(t,znew)...
+[~,ZNEW]=ode23t(@(t,znew)...
     runDynamics(t,znew,NoiseVector), t, Znew0, DynamicSolverOptions);
 ZNEW = transpose(ZNEW);
-disp('Finished stabilityOPF dynamics'); 
+  disp([PreSuccessStr,'Successful']);
+   pause(PauseTime);
+ 
 % 
 % 
 % 
@@ -583,25 +623,48 @@ disp('Finished stabilityOPF dynamics');
 % %%
 % 
 % 
+disp('Retrieving output states, algebraic variables, and controls as a function of time');
 [deltaVec, omegaVec, eVec, mVec,...
     thetaVec, vVec, pgVec, qgVec, ...
     prefVec,fVec, ...
     ploadVec, qloadVec,...
     deltaDotVec, omegaDotVec, eDotVec, mDotVec] =...
-    retrieveOutput( t, ZNEW , NoiseVector);
+    retrieveOutput( t, ZNEW , NoiseVector); 
+
+  disp([PreSuccessStr,'Successful']);
+   pause(PauseTime);
 % 
+disp('Validating results of the dynamical simulation') 
 [ SanityCheck1,SanityCheck2,SanityCheck3 , Success] = sanityCheck(...
     deltaVec, omegaVec, eVec, mVec, ...
     thetaVec, vVec, pgVec, qgVec,...
     prefVec, fVec, ...
     ploadVec,qloadVec,...
     deltaDotVec, omegaDotVec, eDotVec, mDotVec);
-% 
+if Success==1
+  disp([PreSuccessStr,'Successful']);
+   pause(PauseTime);
+else 
+    disp([PreSuccessStr,'Failed!']); 
+    disp('Unfortunately, dynamical results are not reliable'); 
+    pause;
+end
+    
+%
+disp('Evaluating dynamical costs');
 [ TrCost] = calculateTrCostUsingIntegration(pgS, qgS, Alpha,...
     deltaVec, omegaVec, eVec, mVec, prefVec, fVec, ...
     deltaS, omegaS, eS, mS, prefS, fS);
-  
+  disp([PreSuccessStr,'Successful']);
+   pause(PauseTime);
+
+else 
+   disp('Since the size of the network is too large, we only provide dynamic cost estimates'); 
+   TrCost=TrCostEstimate;
 end
+
+TotalCost=SsCost+TrCost;
+
 % 
 % 
 if exist('Results')~=7
@@ -631,5 +694,10 @@ save(savename);
 
 outname=['Results/',CaseFile,'/',SsControl,'/',LfControl,'/',savename];
 out=load(outname);
+
+out.ResultPath=pwd;
 cd(CurrentDirectory);
 
+if (YesPlots) && (N<250)
+    plotsForSolvedCase(out); 
+end

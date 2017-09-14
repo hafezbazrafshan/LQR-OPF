@@ -101,7 +101,7 @@ deltaD(h6Idx)=-dqdlS;
 
 
 
-cvx_begin 
+cvx_begin quiet
 cvx_solver SDPT3
 variables xs(4*G,1) as(2*N+2*G,1) us(2*G,1)  Gamma
 variable P(4*G,4*G) symmetric
@@ -122,7 +122,7 @@ prefs=us(prefIdx);
 fs=us(fIdx); 
 
 SsCost=steadyStateCost(pgs,NetworkS);
-minimize( SsCost+ (Tlqr)*Gamma) ;
+minimize( SsCost+ (Tlqr/2)*Gamma) ;
 subject to:
 
 

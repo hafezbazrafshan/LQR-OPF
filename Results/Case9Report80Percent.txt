@@ -1,0 +1,4 @@
+Network         & Method          & SsCost.         & StCostEst.      & StCost.          & TotCost.        & CompTime        & MaxFreqDev.     & MaxVoltDev.     
+case9wmac_con   & LQR-OPF         & 6167.81         & 39.16           & 39.87            & 6207.68         & 2.52            & 0.0133          0.0244          
+case9wmac_con   & ALQR-OPF        & 6170.23         & 36.87           & 37.54            & 6207.77         & 2.47            & 0.0131          0.0252          
+case9wmac_con   & OPF             & 6113.60         & 640.60          & 635.57           & 6749.17         & 0.45            & 0.0198          0.1240          
