@@ -59,11 +59,17 @@ Xd=diag(XdVec);
 V_g=diag(vg);
 
 
+InvM=diag(1./MVec);
+InvT=diag(1./TauVec);
+InvXprime=diag(1./XprimeVec);
+InvTch=diag(1./TchVec);
+InvFreqR=diag(1./FreqRVec);
+
 
 
 deltaDot=omega-OMEGAS;
-omegaDot=inv(M)*(m-D*(omega-OMEGAS)-pg); 
-eDot=inv(T)*(- inv(Xprime)*Xd*e+ inv(Xprime)*(Xd-Xprime)*V_g*cos(delta-thetag)+f);
-mDot=inv(Tch)*( pref-inv(FreqR)*(omega-OMEGAS)-m); 
+omegaDot=InvM*(m-D*(omega-OMEGAS)-pg); 
+eDot=InvT*(- InvXprime*Xd*e+ InvXprime*(Xd-Xprime)*V_g*cos(delta-thetag)+f);
+mDot=InvTch*( pref-InvFreqR*(omega-OMEGAS)-m); 
 end
 

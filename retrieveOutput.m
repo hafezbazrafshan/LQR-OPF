@@ -71,9 +71,9 @@ eDotVec=zeros(G,NSamples);
 mDotVec=zeros(G,NSamples); 
 
 for tt=1:NSamples
-[ deltaDotVec(:,tt), omegaDotVec(:,tt), eDotVec(:,tt) , mDotVec(:,tt)] = gFunctionVectorized( ...
+[ deltaDotVec(:,tt), omegaDotVec(:,tt), eDotVec(:,tt) , mDotVec(:,tt)] = gTildeFunctionVectorized( ...
     deltaVec(:,tt), omegaVec(:,tt), eVec(:,tt),mVec(:,tt),...
-     vVec(GenSet,tt), thetaVec(GenSet,tt),pgVec(:,tt), prefVec(:,tt), fVec(:,tt));
+     vVec(:,tt), thetaVec(:,tt),pgVec(:,tt), qgVec(:,tt));
 end
 
 for tt=1:NSamples
