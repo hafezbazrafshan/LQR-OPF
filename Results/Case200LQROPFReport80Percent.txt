@@ -1,0 +1,2 @@
+Network         & Method          & SsObjEst.       & SsCost.         & StCostEst.      & StCost.          & TotCost.        & CompTime        & MaxFreqDev.     & MaxVoltDev.     
+case_illinois200 & LQR-OPF         & 56283.61        & 51921.04        & 3688.65         & 3924.39          & 55845.43        & 46017.86        & 0.0126          0.0557          
