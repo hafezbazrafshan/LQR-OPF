@@ -163,10 +163,10 @@ pause(PauseTime);
 
 %% 2.  Populating the initialized steady-state variables from the test case file:
 % we first run an opf to ensure problem is feasible with specified limits
-% Network.bus(:,3)=1.05*Network.bus(:,3);
-% Network.bus(:,4)=1.05*Network.bus(:,4);
-% Network.gen(:,9)=1.05*Network.gen(:,9);
-% Network.gen(:,4)=1.05*Network.gen(:,4);
+% Network.bus(:,3)=1.01*Network.bus(:,3);
+% Network.bus(:,4)=1.01*Network.bus(:,4);
+% Network.gen(:,9)=1.01*Network.gen(:,9);
+% Network.gen(:,4)=1.01*Network.gen(:,4);
 disp('Running initial load flow to obtain initial algebraic variables'); 
 Network=runpf(Network,MatPowerOptions);
 v0=Network.bus(:,8); % eighth column of bus matrix is voltage magnitude solution
@@ -180,14 +180,14 @@ a0=[v0;theta0;pg0;qg0];
 
 % we increase the maximum limit on active and reactive power generation by
 % a little bit to ensure feasibility
-if sum(pg0.*Sbase>Network.gen(:,9))>0
-    Index=find(pg0.*Sbase>Network.gen(:,9));
-    Network.gen(Index,9)=1.02*pg0(Index)*Sbase;
+if sum(pg0.*Sbase>=Network.gen(:,9))>0
+    Index=find(pg0.*Sbase>=Network.gen(:,9));
+    Network.gen(Index,9)=1.01*pg0(Index)*Sbase;
 end
 
-if sum(qg0.*Sbase>Network.gen(:,4))>0
+if sum(qg0.*Sbase>=Network.gen(:,4))>0
     Index=find(qg0.*Sbase>Network.gen(:,4));
-    Network.gen(Index,4)=1.02*qg0(Index)*Sbase;
+    Network.gen(Index,4)=1.01*qg0(Index)*Sbase;
 end
 
 
@@ -243,16 +243,16 @@ else
         disp('Machine data not available, Synthetic data is used');
 
 TauVec=repmat(5,G,1);
-XdVec=repmat(0.7,G,1);
-XqVec=repmat(0.7,G,1);
-XprimeVec=repmat(0.07,G,1);
+XdVec=repmat(0.9,G,1);
+XqVec=repmat(0.9,G,1);
+XprimeVec=repmat(0.06,G,1);
 DVec=zeros(G,1);
-MVec=0.3*repmat(1,G,1);
+MVec=0.2*repmat(1,G,1);
     
 end
 
-TchVec=0.1*ones(G,1); 
-FreqRVec=0.01*ones(G,1).*(2*pi); 
+TchVec=0.2*ones(G,1); 
+FreqRVec=0.02*ones(G,1).*(2*pi); 
 
    disp([PreSuccessStr,'Successful']);
 pause(PauseTime);
@@ -356,28 +356,30 @@ switch SteadyStateMode
             TStart=tic;
   [NetworkS, SuccessFlag]=  runopf(NetworkS,MatPowerOptions);
   [NetworkS,SuccessFlag]=runpf(NetworkS,MatPowerOptions);
-
+SsObjEst=[];
   CompTime=toc(TStart);      
   
     case 'LQR-OPF'
                TStart=tic;
-         [vgS,pgSNonSlack, thetaSSlack,~,~, ~] = ...
+         [vgS,pgS, thetaSSlack,SsObjEst, ~] = ...
               LQROPF( delta0, omega0, e0, m0, v0, theta0, pg0, qg0, pref0, f0,...
     NetworkS,...
    pdS,qdS,pd0,qd0,Alpha); 
 NetworkS.gen(:,6)=vgS;
-NetworkS.gen(GenNonSlackSet,2)=pgSNonSlack.*Sbase;
+% NetworkS.gen(GenNonSlackSet,2)=pgSNonSlack.*Sbase;
+NetworkS.gen(:,2)=pgS.*Sbase;
 NetworkS.bus(NetworkS.bus(:,2)==3,9)=radians2degrees(thetaSSlack);
 [NetworkS,SuccessFlag]=runpf(NetworkS,MatPowerOptions);
          CompTime=toc(TStart);
     case 'ALQR-OPF'
           TStart=tic;
-            [vgS,pgSNonSlack, thetaSSlack,~,~, ~] = ...
+            [vgS,pgS, thetaSSlack,SsObjEst, ~] = ...
               ALQROPF( delta0, omega0, e0, m0, v0, theta0, pg0, qg0, pref0, f0,...
     NetworkS,...
     pdS,qdS,pd0,qd0,Alpha); 
         NetworkS.gen(:,6)=vgS;
-NetworkS.gen(GenNonSlackSet,2)=pgSNonSlack.*Sbase;
+% NetworkS.gen(GenNonSlackSet,2)=pgSNonSlack.*Sbase;
+NetworkS.gen(:,2)=pgS.*Sbase;
 NetworkS.bus(NetworkS.bus(:,2)==3,9)=radians2degrees(thetaSSlack);
 [NetworkS,SuccessFlag]=runpf(NetworkS,MatPowerOptions);
   CompTime=toc(TStart);
@@ -579,9 +581,9 @@ end
 % [ deltaDot0Plus, omegaDot0Plus, eDot0Plus, mDot0Plus ] = gTildeFunctionVectorized(...
 %     delta0Plus, omega0Plus, e0Plus,m0Plus,...
 %      v0Plus,theta0Plus,pg0Plus,qg0Plus);
-[ deltaDot0Plus, omegaDot0Plus, eDot0Plus, mDot0Plus ] = gTildeFunctionVectorized(...
+[ deltaDot0Plus, omegaDot0Plus, eDot0Plus, mDot0Plus ] = gFunctionVectorized(...
     delta0Plus, omega0Plus, e0Plus,m0Plus,...
-     v0Plus,theta0Plus,pg0Plus,qg0Plus);
+     v0Plus(GenSet),theta0Plus(GenSet),pg0Plus,pref0,f0);
 %  
 % 
 disp('Running dynamical simulations');

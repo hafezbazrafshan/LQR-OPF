@@ -1,4 +1,4 @@
-function [vgS,pgSNonSlack, thetaSSlack, K,SsCost, Gamma ] = LQROPF(...
+function [vgS,pgS, thetaSSlack, SsObjEst, Gamma,K ] = LQROPF(...
     delta0, omega0, e0, m0,...
     v0,theta0, pg0, qg0, ...
     pref0, f0,...
@@ -169,7 +169,11 @@ K=-Rinv*Bsys.'*conj(inv(P));
 
 
 vgS=vs(GenSet);
-pgSNonSlack=pgs(GenNonSlackSet);
+% pgSNonSlack=pgs(GenNonSlackSet);
+pgS=pgs;
 thetaSSlack=thetas(SlackIdx);
+TrCostEstimate=(Tlqr/2)*Gamma;
+SsObjEst=SsCost+TrCostEstimate;
+
 end
 

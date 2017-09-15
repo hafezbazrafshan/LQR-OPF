@@ -1,1 +1,4 @@
-Network         & Method          & SsCost.         & StCostEst.      & StCost.          & TotCost.        & CompTime        & MaxFreqDev.     & MaxVoltDev.     
+Network         & Method          & SsObjEst.       & SsCost.         & StCostEst.      & StCost.          & TotCost.        & CompTime        & MaxFreqDev.     & MaxVoltDev.     
+case57          & LQR-OPF         & 52726.60        & 50651.88        & 2396.76         & 2401.60          & 53053.49        & 8.04            & 0.0282          0.0546          
+case57          & ALQR-OPF        & 52730.46        & 50628.77        & 2429.34         & 2433.36          & 53062.13        & 2.74            & 0.0281          0.0549          
+case57          & OPF             &  & 47199.75        & 34741.94        & 39625.60         & 86825.35        & 0.47            & 0.0733          0.1117          

@@ -1,4 +1,4 @@
-function [vgS,pgSNonSlack, thetaSSlack,K,SsCost, Gamma,...
+function [vgS,pgS, thetaSSlack,SsObjEst, Gamma,K...
   RiccatiSVec,KVec, SsCostVec,GammaVec,TrCostEstimateVec,ObjValue, ItSuccess] = ...
    ALQROPF( delta0, omega0, e0, m0,...
     v0,theta0, pg0, qg0, ...
@@ -180,9 +180,11 @@ BestIt=1;
 SsCost=steadyStateCost(pgs,NetworkS);
 Gamma=quad_form((xs-x0),RiccatiS);
 TrCostEstimate=(Tlqr/2)*Gamma;
+SsObjEst=SsCost+TrCostEstimate;
 
 vgS=vs(GenSet);
-pgSNonSlack=pgs(GenNonSlackSet);
+% pgSNonSlack=pgs(GenNonSlackSet);
+pgS=pgs;
 thetaSSlack=thetas(SlackIdx);
 
 
@@ -260,10 +262,12 @@ if ObjValue(ItNo)<ObjValue(BestIt)
 SsCost=steadyStateCost(pgs,NetworkS);
 Gamma=quad_form((xs-x0),RiccatiS);
 TrCostEstimate=(Tlqr/2)*Gamma;
+SsObjEst=SsCost+TrCostEstimate;
 
-vgs=vs(GenSet);
-pgsNonSlack=pgs(GenNonSlackSet);
-thetaSlack=thetas(SlackIdx);
+vgS=vs(GenSet);
+% pgSNonSlack=pgs(GenNonSlackSet);
+pgS=pgs;
+thetaSSlack=thetas(SlackIdx);
 end
 
 

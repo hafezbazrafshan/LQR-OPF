@@ -63,7 +63,7 @@ InvM=diag(1./MVec);
 InvT=diag(1./TauVec);
 InvXprime=diag(1./XprimeVec);
 InvTch=diag(1./TchVec);
-InvfreqR=diag(1./FreqRVec);
+InvFreqR=diag(1./FreqRVec);
 
 
 
