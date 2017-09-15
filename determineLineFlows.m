@@ -2,8 +2,11 @@ function [ pFrom,pTo ] = determineLineFlows(lineIdx,v,theta)
 %UNTITLED2 Summary of this function goes here
 %   Detailed explanation goes here
 
-global network yff_vec yft_vec ytf_vec ytt_vec
 
+
+% system constants [these do not change]
+global OMEGAS Sbase N G L NodeSet GenSet LoadSet YMat GMat BMat Cg...
+    YffVec YftVec  YtfVec YttVec
 
 if isempty(lineIdx)
     pFrom=0;
@@ -11,8 +14,8 @@ if isempty(lineIdx)
    return;
 end
 
-fromBus=network.branch(lineIdx,1); 
-toBus=network.branch(lineIdx,2); 
+fromBus=Network.branch(lineIdx,1); 
+toBus=Network.branch(lineIdx,2); 
 vFrom=v(fromBus); 
 vTo=v(toBus); 
 
@@ -25,8 +28,8 @@ vToComplex=vTo.*exp(1j*thetaTo);
 
 
 
-iFrom=yff_vec(lineIdx).*vFromComplex+yft_vec(lineIdx).*vToComplex; 
-iTo=ytf_vec(lineIdx).*vFromComplex+ytt_vec(lineIdx).*vToComplex;
+iFrom=YffVec(lineIdx).*vFromComplex+YftVec(lineIdx).*vToComplex; 
+iTo=YtfVec(lineIdx).*vFromComplex+YttVec(lineIdx).*vToComplex;
 
 
 pFrom=real(vFromComplex.*conj(iFrom)); 

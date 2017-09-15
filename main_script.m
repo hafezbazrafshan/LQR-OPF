@@ -12,8 +12,9 @@ clc;
 % casefiles={'case57'};
 % casefiles={'case9wmac_con'};
 
-
-
+casefiles={'case9wmac_con'};
+LfControl='AGC';
+Alpha=0.8;
 
 
 for case_index=1:length(casefiles)

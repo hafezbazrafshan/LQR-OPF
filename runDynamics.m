@@ -50,7 +50,7 @@ global TFinal Tpert ...
 global pd0 qd0...
     
 
-
+global ControlMode
 
 
 
@@ -68,8 +68,9 @@ v=z(mIdx(end)+vIdx);
 pg=z(mIdx(end)+pgIdx);
 qg=z(mIdx(end)+qgIdx);
 
-
-
+if strcmp(ControlMode,'AGC')
+y=z(mIdx(end)+qgIdx(end)+yIdx);
+end
 
 
 
@@ -121,10 +122,14 @@ gz=[deltaDot; omegaDot; eDot;mDot];
     pg,qg);
 
 hz=[h1;h2;h3;h4;h5;h6];
+
+if strcmp(ControlMode,'AGC')
+
+ [ yDot, ACE, PMeasured, OmegaMeasured] = agcParams(omega,y, v,theta, pg)
+
+else 
     fz=[gz;hz-d];
-
-
-
+end
 
 end
 

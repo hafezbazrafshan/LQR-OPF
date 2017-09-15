@@ -1,6 +1,6 @@
 function [ deltaDot, omegaDot, eDot, mDot ] = gTildeFunctionVectorized( ...
     delta, omega, e,m,...
-     v,theta,pg,qg)
+     v,theta,pg,qg,y)
 % GFUNCTIONVECTORIZED calculates the differential function g(x,a,u); according to 
 % CDC 2016 (1a)--(1c). 
 % [ deltaDot, omegaDot, eDot ] = gFunctionVectorized( ...
@@ -74,8 +74,9 @@ thetag=theta(GenSet);
 
 
 
+
 [pref,f]=control_law(ControlMode,delta,omega,e,m,...
-                    v, theta, pg,qg);
+                    v, theta, pg,qg,y);
 
 
 deltaDot=omega-OMEGAS;

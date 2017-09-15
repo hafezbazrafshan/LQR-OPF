@@ -1,5 +1,5 @@
 function [pref,f]=control_law(ControlMode,delta,omega,e,m,...
-                    v, theta, pg,qg)
+                    v, theta, pg,qg,y)
       
                 
            
@@ -55,7 +55,8 @@ global KLQRstep
              case 'AGC'
               u=KLQRstep*[delta- deltaS; omega- omegaS; e-eS;m-mS]+[prefS;fS];
 %               f=KLQRstep(G+1:end,eIdx)*[e-eS]+fS;
-             pref=zeros(G,1);
+f=u(G+1:end);
+%              pref=zeros(G,1);
              for ii=1:NumberOfAreas
 %                  pref(GensPerArea{ii,1})=pref0(GensPerArea{ii,1})+0.5*(ParticipationFactors{ii}.*y(ii))+0.5*(pg(GensPerArea{ii,1})-pg0(GensPerArea{ii,1}));
 %   pref(GensPerArea{ii,1})=pref0(GensPerArea{ii,1})+1*(ParticipationFactors{ii}.*y(ii))+0*(pg(GensPerArea{ii,1})-pg0(GensPerArea{ii,1}));

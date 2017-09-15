@@ -152,7 +152,7 @@ TieLineFromSet=cell(NumberOfAreas,1);
 TieLineToSet=cell(NumberOfAreas,1);
 for ii=1:NumberOfAreas
     BusesPerArea{ii,1}=find(Network.bus(:,7)==AreaSet(ii)); 
-    GensPerArea{ii,1}=find(Network.bus(gen_set,7)==AreaSet(ii));
+    GensPerArea{ii,1}=find(Network.bus(GenSet,7)==AreaSet(ii));
     TieLineFromSet{ii,1}= find(and(Network.bus(Network.branch(:,1),7)==AreaSet(ii),Network.bus(Network.branch(:,2),7)~=AreaSet(ii)));
     TieLineToSet{ii,1}=find(and(Network.bus(Network.branch(:,1),7)~=AreaSet(ii),Network.bus(Network.branch(:,2),7)==AreaSet(ii)));
 end
@@ -517,26 +517,7 @@ d0Plus(h6Idx)=-qdl0Plus;
 
 
 
-if strcmp(ControlMode,'AGC')
-     ParticipationFactors=cell(NumberOfAreas,1);
-    y0plus=zeros(G,1);
-     PscheduledS=zeros(NumberOfAreas,1);
-     KI=1;
-     KACE=	1;
-     KPG=0;
-     KSumPG=1;
-     KPflow=1;
-     KThetaSlack=20;
-     for ii=1:NumberOfAreas
-          [PFromS,~]=determineLineFlows(TieLineFromSet{ii,1},vS,thetaS);
-               [~,PToS]=determineLineFlows(TieLineToSet{ii,1},vS,thetaS); 
-               PScheduledS(ii,1)=sum(PFromS)-sum(PToS);
-ParticipationFactors{ii,1}=pgS(GensPerArea{ii,1})./sum(pgS(GensPerArea{ii,1}));
 
-     end
-
-[~, ACE0Plus, PMeasured0plus, OmegaMeasured0plus] = agcParams(omega0Plus,y0Plus, v0Plus,theta0Plus, pg0Plus);
-end
 
 % % from this point on we would like to have a closed loop system using
 % % KLQRstep and the optimal controller set-points 
@@ -580,17 +561,54 @@ end
 % 
 % [ deltaDot0Plus, omegaDot0Plus, eDot0Plus, mDot0Plus ] = gTildeFunctionVectorized(...
 %     delta0Plus, omega0Plus, e0Plus,m0Plus,...
-%      v0Plus,theta0Plus,pg0Plus,qg0Plus);
+%      v0Plus,theta0Plus,pg0Plus,qg0Plus);\
+
+
+
+
+if strcmp(ControlMode,'AGC')
+     ParticipationFactors=cell(NumberOfAreas,1);
+    y0Plus=zeros(G,1);
+     PScheduledS=zeros(NumberOfAreas,1);
+     KI=1;
+     KACE=	1;
+     KPG=0;
+     KSumPG=1;
+     KPflow=1;
+     KThetaSlack=0;
+     for ii=1:NumberOfAreas
+          [PFromS,~]=determineLineFlows(TieLineFromSet{ii,1},vS,thetaS);
+               [~,PToS]=determineLineFlows(TieLineToSet{ii,1},vS,thetaS); 
+               PScheduledS(ii,1)=sum(PFromS)-sum(PToS);
+ParticipationFactors{ii,1}=pgS(GensPerArea{ii,1})./sum(pgS(GensPerArea{ii,1}));
+
+     end
+
+[yDot0Plus, ACE0Plus, PMeasured0plus, OmegaMeasured0plus] = agcParams(omega0Plus,y0Plus, v0Plus,theta0Plus, pg0Plus);
+end
+
+
+
+%%
+
 [ deltaDot0Plus, omegaDot0Plus, eDot0Plus, mDot0Plus ] = gFunctionVectorized(...
     delta0Plus, omega0Plus, e0Plus,m0Plus,...
      v0Plus(GenSet),theta0Plus(GenSet),pg0Plus,pref0,f0);
 %  
 % 
 disp('Running dynamical simulations');
+if strcmp(ControlMode,'LQR')
 DynamicSolverOptions.Jacobian=@dynamicsJacobian; % this is for the ode solver
+end
 Znew0=[delta0Plus; omega0Plus; e0Plus; m0Plus; v0Plus; theta0Plus; pg0Plus; qg0Plus];
+if strcmp(ControlMode,'AGC')
+    Znew0=[Znew0;y0Plus];
+end
 ZDot0Plus=zeros(size(Znew0));
 ZDot0Plus([deltaIdx;omegaIdx;eIdx;mIdx])=[deltaDot0Plus;omegaDot0Plus;eDot0Plus;mDot0Plus];
+if strcmp(ControlMode,'AGC')
+    Znew0=[Znew0;yDot0Plus];
+end
 DynamicSolverOptions.InitialSlope=ZDot0Plus;
 % 
 % 
