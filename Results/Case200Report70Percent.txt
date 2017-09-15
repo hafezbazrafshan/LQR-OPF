@@ -1,3 +1,0 @@
-Network         & Method          & SsCost.         & StCostEst.      & StCost.          & TotCost.        & CompTime        & MaxFreqDev.     & MaxVoltDev.     
-case_illinois200 & ALQR-OPF        & 50335.38        & 3227.56         & 3455.22          & 53790.60        & 6.97            & 0.0195          0.0571          
-case_illinois200 & OPF             & 48272.41        & 12499.06        & 13568.73         & 61841.15        & 0.63            & 0.0479          0.0705          
