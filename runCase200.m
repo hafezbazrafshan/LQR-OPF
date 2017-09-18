@@ -9,10 +9,10 @@ Alpha=0.8;
 Tlqr=1000;
 
 % LfControl Method:
-LfControl='LQR';
+LfControl='AGC';
 
-% StControlOptions={'ALQR-OPF','OPF'};
-StControlOptions={'LQR-OPF'};
+StControlOptions={'ALQR-OPF','OPF'};
+% StControlOptions={'LQR-OPF'};
 
 Output=cell(size(StControlOptions));
 
@@ -20,7 +20,7 @@ Output=cell(size(StControlOptions));
 if exist('Results')~=7
 mkdir('Results');
 end
-SaveName=['Case200LQROPFReport',num2str(Alpha*100),'Percent.txt'];
+SaveName=['Case200TestReport',num2str(Alpha*100),'Percent.txt'];
 FileID=fopen(['Results/',SaveName],'w'); 
 fprintf(FileID,'%-15s & %-15s & %-15s & %-15s & %-15s & %-15s  & %-15s & %-15s & %-15s & %-15s \n',...
     'Network', 'Method', 'SsObjEst.', 'SsCost.', 'StCostEst.', 'StCost.', 'TotCost.', 'CompTime', 'MaxFreqDev.', 'MaxVoltDev.');

@@ -4,7 +4,7 @@ function [K, TrCostEstimate,Gamma, Asys, Bsys] = LQRstepCARE( deltaS, omegaS, eS
     delta0, omega0, e0, m0, ...
     v0, theta0, pg0, qg0, ...
     pref0, f0, ...
-    Alpha,NetworkS)
+    Alpha,Tlqr,NetworkS)
 %LQRstep calculates the required feedback gain for the LQR step based on
 %the desired steady-state zS and the previous steady-state z0. 
 % The formulation solves an SDP per equation (18) but with zS known. 
@@ -28,7 +28,7 @@ global deltaIdx omegaIdx eIdx mIdx  ...
 % machine [these do not change]
 global  TauVec XdVec XqVec XprimeVec DVec MVec TchVec FreqRVec...
 
-global Tlqr
+
 
 
 %% Obtaining the jacobians:
@@ -57,6 +57,7 @@ Qinv=speye(4*G);
 Rinv=speye(2*G);
 
 [Qinv,Rinv]=QinvRinv(pgS,qgS,Alpha, Qinv, Rinv,NetworkS);
+
 
 
 

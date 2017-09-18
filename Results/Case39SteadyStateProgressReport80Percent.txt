@@ -1,0 +1,4 @@
+Network         & SsMethod        & ObjValue        & SsCost          & StCostEst.      & TotalCostEst.   & CompTime       
+case39wmac_con  & LQR-OPF         & 56976.50        & 52871.28        & 3808.45         & 56679.73        & 24.83            
+case39wmac_con  & ALQR-OPF        & 56978.28        & 52878.61        & 3789.91         & 56668.53        & 5.24             
+case39wmac_con  & OPF             &  & 51386.02        & 18519.21        & 69905.23        & 1.69             

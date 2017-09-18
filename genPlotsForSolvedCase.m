@@ -52,9 +52,9 @@ figure1=figure('Units','inches',...
 'Position',[figx0 figy0 width height],...
 'PaperPositionMode','auto');
 set(figure1, 'Name', 'genangle');
-plot(t,deltaVec,'lineWidth',2);
+plot(t,deltaVec-repmat(deltaS,1,length(t)),'lineWidth',2);
  xlabel('Time (sec)', 'FontWeight','bold');
- ylabel('$\boldmath{\delta}$ (Rad)'); 
+ ylabel('$\boldmath{\delta}-\boldmath{\delta}^{s}$ (Rad)'); 
 axis([0 Tfinal angleyMin-angleyOffSet angleyMax+angleyOffSet]);
 set(gca,'box','on');
 set(gca,'fontSize',22); 
@@ -74,9 +74,9 @@ figure1=figure('Units','inches',...
 'Position',[figx0 figy0 width height],...
 'PaperPositionMode','auto');
 set(figure1, 'Name', 'gene');
-plot(t,eVec,'lineWidth',2);
+plot(t,eVec-repmat(eS,1,length(t)),'lineWidth',2);
  xlabel('Time (sec)', 'FontWeight','bold');
- ylabel('$\boldmath{e}$ (pu)'); 
+ ylabel('$\boldmath{e}-\boldmath{e}^{s}$ (pu)'); 
 axis([0 Tfinal eyMin-eyOffSet eyMax+eyOffSet]);
 set(gca,'box','on');
 set(gca,'fontSize',22); 
@@ -94,9 +94,9 @@ figure1=figure('Units','inches',...
 'Position',[figx0 figy0 width height],...
 'PaperPositionMode','auto');
 set(figure1, 'Name', 'gene');
-plot(t,mVec,'lineWidth',2);
+plot(t,mVec-repmat(mS,1,length(t)),'lineWidth',2);
  xlabel('Time (sec)', 'FontWeight','bold');
- ylabel('$\boldmath{m}$ (pu)'); 
+ ylabel('$\boldmath{m}-\boldmath{m}^{s}$ (pu)'); 
 axis([0 Tfinal myMin-myOffSet myMax+myOffSet]);
 set(gca,'box','on');
 set(gca,'fontSize',22); 
@@ -118,9 +118,9 @@ figure1=figure('Units','inches',...
 'Position',[figx0 figy0 width height],...
 'PaperPositionMode','auto');
 set(figure1, 'Name', 'Voltage mags');
-plot(t,vVec,'lineWidth',2);
+plot(t,vVec-repmat(vS,1,length(t)),'lineWidth',2);
  xlabel('Time (sec)', 'FontWeight','bold');
- ylabel('$\boldmath{v}$ (pu)'); 
+ ylabel('$\boldmath{v}-\boldmath{v}^{s}$ (pu)'); 
 axis([0 Tfinal vyMin-vyOffSet vyMax+vyOffSet]);
 set(gca,'box','on');
 set(gca,'fontSize',22); 
@@ -139,9 +139,9 @@ figure1=figure('Units','inches',...
 'Position',[figx0 figy0 width height],...
 'PaperPositionMode','auto');
 set(figure1, 'Name', 'voltage angles');
-plot(t,thetaVec,'lineWidth',2);
+plot(t,thetaVec-repmat(thetaS,1,length(t)),'lineWidth',2);
  xlabel('Time (sec)', 'FontWeight','bold');
- ylabel('$\boldmath{\theta}$ (Rad)'); 
+ ylabel('$\boldmath{\theta}-\boldmath{\theta}^{s}$ (Rad)'); 
 axis([0 Tfinal thetayMin-thetayOffSet thetayMax+thetayOffSet]);
 set(gca,'box','on');
 set(gca,'fontSize',22); 
@@ -162,9 +162,9 @@ figure1=figure('Units','inches',...
 'Position',[figx0 figy0 width height],...
 'PaperPositionMode','auto');
 set(figure1, 'Name', 'voltage angles');
-plot(t,pgVec,'lineWidth',2);
+plot(t,pgVec-repmat(pgS,1,length(t)),'lineWidth',2);
  xlabel('Time (sec)', 'FontWeight','bold');
- ylabel('$\boldmath{pg}$ (pu)'); 
+ ylabel('$\boldmath{p}_{g}-\boldmath{p}_{g}^{s}$ (pu)'); 
 axis([0 Tfinal pgyMin-pgyOffSet pgyMax+pgyOffSet]);
 set(gca,'box','on');
 set(gca,'fontSize',22); 
@@ -183,9 +183,9 @@ figure1=figure('Units','inches',...
 'Position',[figx0 figy0 width height],...
 'PaperPositionMode','auto');
 set(figure1, 'Name', 'pg');
-plot(t,qgVec,'lineWidth',2);
+plot(t,qgVec-repmat(qgS,1,length(t)),'lineWidth',2);
  xlabel('Time (sec)', 'FontWeight','bold');
- ylabel('$\boldmath{qg}$ (pu)'); 
+ ylabel('$\boldmath{q}_g- \boldmath{q}_{g}^{s}$ (pu)'); 
 axis([0 Tfinal qgyMin-qgyOffSet qgyMax+qgyOffSet]);
 set(gca,'box','on');
 set(gca,'fontSize',22); 
@@ -207,9 +207,9 @@ figure1=figure('Units','inches',...
 'Position',[figx0 figy0 width height],...
 'PaperPositionMode','auto');
 set(figure1, 'Name', 'pg');
-plot(t,prefVec,'lineWidth',2);
+plot(t,prefVec-repmat(prefS,1,length(t)),'lineWidth',2);
  xlabel('Time (sec)', 'FontWeight','bold');
- ylabel('$\boldmath{pref}$ (pu)'); 
+ ylabel('$\boldmath{r}-\boldmath{r}^s$ (pu)'); 
 axis([0 Tfinal prefyMin-prefyOffSet prefyMax+prefyOffSet]);
 set(gca,'box','on');
 set(gca,'fontSize',22); 
@@ -228,9 +228,9 @@ figure1=figure('Units','inches',...
 'Position',[figx0 figy0 width height],...
 'PaperPositionMode','auto');
 set(figure1, 'Name', 'pg');
-plot(t,fVec,'lineWidth',2);
+plot(t,fVec-repmat(fS,1,length(t)),'lineWidth',2);
  xlabel('Time (sec)', 'FontWeight','bold');
- ylabel('$\boldmath{f}$ (pu)'); 
+ ylabel('$\boldmath{f}-\boldmath{f}^{s}$ (pu)'); 
 axis([0 Tfinal fyMin-fyOffSet fyMax+fyOffSet]);
 set(gca,'box','on');
 set(gca,'fontSize',22); 

@@ -37,12 +37,12 @@ global  G L  GenSet LoadSet
 
 %  indices [these  do not change]
 global deltaIdx omegaIdx eIdx mIdx  ...
-    thetaIdx vIdx pgIdx qgIdx  
+    thetaIdx vIdx pgIdx qgIdx  yIdx
 
     
 
 % dynamical simulations 
-global TFinal Tpert ...
+global TFinal TPert ...
     PertSet PPertValues QPertValues 
 
 
@@ -50,7 +50,6 @@ global TFinal Tpert ...
 global pd0 qd0...
     
 
-global ControlMode
 
 
 
@@ -68,6 +67,7 @@ v=z(mIdx(end)+vIdx);
 pg=z(mIdx(end)+pgIdx);
 qg=z(mIdx(end)+qgIdx);
 
+y=[];
 if strcmp(ControlMode,'AGC')
 y=z(mIdx(end)+qgIdx(end)+yIdx);
 end
@@ -98,7 +98,7 @@ h5Idx=(4*G+1:4*G+L).';
 h6Idx=(4*G+L+1:4*G+2*L).';
 d=zeros(h6Idx(end),1);
 
-[pload,qload]=loadPert('Transient',t,pd0,qd0,PertSet, PPertValues,QPertValues, Tpert,TFinal,NoiseVector);
+[pload,qload]=loadPert('Transient',t,pd0,qd0,PertSet, PPertValues,QPertValues, TPert,TFinal,NoiseVector);
 ploadg=pload(GenSet);
 qloadg=qload(GenSet);
 ploadl=pload(LoadSet);
@@ -108,10 +108,10 @@ d(h4Idx)=-qloadg;
 d(h5Idx)=-ploadl;
 d(h6Idx)=-qloadl;
 
-
 [ deltaDot, omegaDot, eDot, mDot] =gTildeFunctionVectorized( ...
     delta, omega, e,m,...
-    v,theta, pg,qg);
+    v,theta, pg,qg,y);
+
 
 
 gz=[deltaDot; omegaDot; eDot;mDot];
@@ -125,8 +125,8 @@ hz=[h1;h2;h3;h4;h5;h6];
 
 if strcmp(ControlMode,'AGC')
 
- [ yDot, ACE, PMeasured, OmegaMeasured] = agcParams(omega,y, v,theta, pg)
-
+ [ yDot, ACE, PMeasured, OmegaMeasured] = agcParams(omega,y, v,theta, pg);
+fz=[gz; hz-d; yDot];
 else 
     fz=[gz;hz-d];
 end

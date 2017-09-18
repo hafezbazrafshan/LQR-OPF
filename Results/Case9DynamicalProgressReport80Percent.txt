@@ -1,0 +1,10 @@
+---------------------LQR-----------------
+Network         & SsMethod        & StCost          & TotalCost.      & MaxFreqDev      & MaxVoltDev      
+case9wmac_con   & LQR-OPF          & 1404.97         & 7550.33         & 0.0201          & 0.1052           
+case9wmac_con   & ALQR-OPF         & 1409.68         & 7555.29         & 0.0201          & 0.1053           
+case9wmac_con   & OPF              & 346.15          & 6459.75         & 0.0201          & 0.1240           
+---------------------AGC-----------------
+Network         & SsMethod        & StCost          & TotalCost.      & MaxFreqDev      & MaxVoltDev      
+case9wmac_con   & LQR-OPF          & 1471.30         & 7616.66         & 0.0147          & 0.0999           
+case9wmac_con   & ALQR-OPF         & 1478.29         & 7623.90         & 0.0147          & 0.1000           
+case9wmac_con   & OPF              & 623.62          & 6737.22         & 0.0161          & 0.1240           

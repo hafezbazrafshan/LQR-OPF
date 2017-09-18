@@ -1,36 +1,65 @@
 clear all;
 clc;
-casefile='case9wmac_con';
+CaseFiles={'case9wmac_con', 'case14wmac_con','case39wmac_con','case57'};
 
+% Perturbation
+PRatio=0.1; 
+QRatio=0.0484;
+
+
+SsControlOptions={'LQR-OPF', 'ALQR-OPF','OPF'};
+SteadyStateOutput=cell(length(SsControlOptions),1);
 % Coupling parameter
 Alpha=0.8;
 
 % LQR time importance
 Tlqr=1000;
 
-% LfControl Method:
-LfControl='LQR';
 
-StControlOptions={'LQR-OPF', 'ALQR-OPF','OPF'};
-
-Output=cell(size(StControlOptions));
-
-
+%% Steady-state runs
 if exist('Results')~=7
 mkdir('Results');
 end
-SaveName=['Case9Report',num2str(Alpha*100),'Percent.txt'];
+SaveName=['SteadyStateProgressReport',num2str(Alpha*100),'Percent.txt'];
 FileID=fopen(['Results/',SaveName],'w'); 
-fprintf(FileID,'%-15s & %-15s & %-15s & %-15s & %-15s & %-15s  & %-15s & %-15s & %-15s & %-15s \n',...
-    'Network', 'Method', 'SsObjEst.', 'SsCost.', 'StCostEst.', 'StCost.', 'TotCost.', 'CompTime', 'MaxFreqDev.', 'MaxVoltDev.');
+fprintf(FileID,'%-15s & %-15s & %-15s & %-15s & %-15s & %-15s & %-15s\n',...
+    'Network', 'SsMethod','ObjValue', 'SsCost', 'StCostEst.','TotalCostEst.', 'CompTime');
 
-
-
-for ii=1:length(StControlOptions)
-    Output{ii}=workflow(casefile,StControlOptions{ii},LfControl,Alpha, 'WithPlots');  
-     fprintf(FileID, '%-15s & %-15s & %-15.2f & %-15.2f & %-15.2f & %-15.2f  & %-15.2f & %-15.2f & %-15.4f %-15.4f \n', ...
-    casefile, StControlOptions{ii}, Output{ii}.SsObjEst, Output{ii}.SsCost, Output{ii}.TrCostEstimate, Output{ii}.TrCost, Output{ii}.TotalCost, Output{ii}.CompTime, ...
-    max(max(abs(Output{ii}.omegaVec-Output{ii}.OMEGAS)))./(2*pi), max(max(abs(Output{ii}.vVec-repmat(Output{ii}.vS, 1,Output{ii}.NSamples)))));
+for ii=1:length(SsControlOptions)
+    SteadyStateCase=steadyStateDriver(CaseFile,SsControlOptions{ii},Alpha, Tlqr, PRatio, QRatio);  
+    SteadyStateOutput{ii}=SteadyStateCase;
+     fprintf(FileID, '%-15s & %-15s & %-15.2f & %-15.2f & %-15.2f & %-15.2f & %-15.2f  \n', ...
+    CaseFile, SsControlOptions{ii}, SteadyStateCase.SsObjEst, SteadyStateCase.SsCost,...
+   SteadyStateCase.TrCostEstimate, SteadyStateCase.TotalCostEstimate, SteadyStateCase.CompTime);
 end
 
 fclose(FileID);
+
+
+%% Dynamical simulations
+LfControlOptions={'LQR','AGC'};
+DynamicOutput=cell(size(LfControlOptions));
+SaveName=['DynamicalProgressReport',num2str(Alpha*100),'Percent.txt'];
+FileID=fopen(['Results/',SaveName],'w'); 
+
+
+for jj=1:length(LfControlOptions)
+              LfControl=LfControlOptions{jj};
+              fprintf(FileID,['---------------------', LfControl, '-----------------', '\n']);
+              fprintf(FileID,'%-15s & %-15s & & %-15s & %-15s & %-15s & %-15s & %-15s \n',...
+    'Network', 'SsMethod', 'SsCost','StCost','TotalCost.', 'MaxFreqDev', 'MaxVoltDev');
+for ii=1:length(SsControlOptions)
+    DynamicCase=dynamicDriver([SteadyStateOutput{ii}.SteadyStatePath, '/',SteadyStateOutput{ii}.SteadyStateFileName], LfControl,'YesPlots');
+    DynamicOutput{ii}=DynamicCase;
+     fprintf(FileID, '%-15s & %-15s  & %-15.2f & %-15.2f & %-15.2f & %-15.4f & %-15.4f  \n', ...
+    CaseFile, SsControlOptions{ii}, DynamicCase.SsCost, DynamicCase.TrCost, DynamicCase.TotalCost,...
+    DynamicCase.MaxFreqDev, DynamicCase.MaxVoltDev );
+end
+end
+fclose(FileID);
+
+
+
+
+
+

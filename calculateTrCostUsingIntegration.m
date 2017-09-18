@@ -1,10 +1,9 @@
 function [ TrCost] = calculateTrCostUsingIntegration(pgS, qgS, alpha,...
     deltaVec, omegaVec, eVec, mVec, prefVec, fVec, ...
-    deltaS, omegaS, eS, mS, prefS, fS)
+    deltaS, omegaS, eS, mS, prefS, fS, Tlqr)
 %UNTITLED7 Summary of this function goes here
 %   Detailed explanation goes here
 global G NSamples NPertSamples deltaIdx omegaIdx eIdx mIdx prefIdx fIdx NetworkS
-global Tlqr
 
 
 [Qinv,Rinv]=QinvRinv(pgS,qgS,alpha, zeros(4*G), zeros(2*G),NetworkS);

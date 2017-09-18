@@ -1,4 +1,4 @@
-function [Pload,Qload, NoiseVector]=loadPert(TimeMod, t,Pload0,Qload0,PertSet, PPertValues, QPertValues,Tpert,Tfinal,NoiseVector)
+function [Pload,Qload, NoiseVector]=loadPert(TimeMod, t,Pload0,Qload0,PertSet, PPertValues, QPertValues,TPert,TFinal,NoiseVector)
 %LOADPERT produces a new load starting at Tpert
 %   [pload,qload]=loadPert(timeMod, t,pload0,qload0,nodepert_set, pertvalue_set, Tpert)
 %   produces a new  real and reactive power load at Tpert 

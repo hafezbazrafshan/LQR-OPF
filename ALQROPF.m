@@ -4,7 +4,7 @@ function [vgS,pgS, thetaSSlack,SsObjEst, Gamma,K...
     v0,theta0, pg0, qg0, ...
     pref0, f0,...
     NetworkS,...
-    pdS,qdS,pd0,qd0, Alpha)
+    pdS,qdS,pd0,qd0, Alpha,Tlqr)
 %AUGMENTEDOPF  implements augmented opf per equation (18) CDC 2016. 
 %    [vs,thetas, pgs,qgs, K ] = augmentedOPF( z0,...
  %   deltaploadg,deltaqloadg,deltaploadl,deltaqloadl) implements the
@@ -54,7 +54,7 @@ global deltaIdx omegaIdx eIdx mIdx  ...
 global  TauVec XdVec XqVec XprimeVec DVec MVec TchVec FreqRVec...
 
 
-global Tlqr
+
 
  
     %% Obtaining the jacobians:
@@ -102,7 +102,7 @@ deltaD(h6Idx)=-dqdlS;
 
 %% Alternate project-minimize algorithm
  % setting up maximum number of iterations and initial objectives
-MaxIt=5;
+MaxIt=2;
 ObjValue=-inf+zeros(MaxIt,1); 
 ZsVec=sparse(length([x0;a0;u0]),MaxIt);
 RiccatiSVec=sparse(16*(G^2),MaxIt);
@@ -147,6 +147,8 @@ deltaD==hx*(xs-x0)+ha*(as-a0);
 NetworkS.bus(:,13)<= vs<=NetworkS.bus(:,12);
 NetworkS.gen(:,5)./Sbase<=qgs<=NetworkS.gen(:,4)./Sbase;
 NetworkS.gen(:,10)./Sbase <= pgs <= NetworkS.gen(:,9)./Sbase; 
+
+
 
  % finds the slack bus
 thetas(SlackIdx)==theta0(SlackIdx);

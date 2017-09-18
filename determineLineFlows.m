@@ -8,6 +8,8 @@ function [ pFrom,pTo ] = determineLineFlows(lineIdx,v,theta)
 global OMEGAS Sbase N G L NodeSet GenSet LoadSet YMat GMat BMat Cg...
     YffVec YftVec  YtfVec YttVec
 
+global Network
+
 if isempty(lineIdx)
     pFrom=0;
    pTo=0;

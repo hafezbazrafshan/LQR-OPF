@@ -6,12 +6,15 @@ function  plotsForSolvedCase(casefile )
 % 
 % 
 
-v2struct(casefile);
-cd(ResultPath);
+load([casefile.DynamicPath, '/',casefile.DynamicFileName]);
+cd(DynamicPath);
 if exist('figures')~=7
     mkdir('figures');
 end
 cd('figures'); 
+   
+get(0, 'DefaultFigureVisible');
+set(0, 'DefaultFigureVisible', 'on');
 % plots
 figx0=0;
 figy0=1;
@@ -45,64 +48,64 @@ print -depsc2 freq
 % 
 % 
 % 
-AngleyMin=min(min(deltaVec));
-AngleyMax=max(max(deltaVec));
+AngleyMin=min(min(deltaVec-repmat(deltaS,1,length(t))));
+AngleyMax=max(max(deltaVec-repmat(deltaS,1,length(t))));
 AngleyOffSet=0;
 Figure2=figure('Units','inches',...
 'Position',[figx0 figy0 width height],...
 'PaperPositionMode','auto');
 set(Figure2, 'Name', 'GenAngle');
-plot(t,deltaVec,'lineWidth',2);
+plot(t,deltaVec-repmat(deltaS,1,length(t)),'lineWidth',2);
  xlabel('Time (sec)', 'FontWeight','bold');
- ylabel('$\boldmath{\delta}$ (Rad)'); 
+ ylabel('$\boldmath{\delta}-\boldmath{\delta}^s$ (Rad)'); 
 axis([0 TFinal AngleyMin-AngleyOffSet AngleyMax+AngleyOffSet]);
 set(gca,'box','on');
 set(gca,'fontSize',22); 
 set(0,'defaulttextinterpreter','latex')
  grid on;
-title('Generator angles'); 
+title('Generator angle dev.'); 
   print -dpdf angles.pdf
 print -depsc2 angles
 
 
 
 
-eyMin=min(min(eVec));
-eyMax=max(max(eVec));
+eyMin=min(min(eVec-repmat(eS,1,length(t))));
+eyMax=max(max(eVec-repmat(eS,1,length(t))));
 eyOffSet=0;
 Figure3=figure('Units','inches',...
 'Position',[figx0 figy0 width height],...
 'PaperPositionMode','auto');
 set(Figure3, 'Name', 'Gene');
-plot(t,eVec,'lineWidth',2);
+plot(t,eVec-repmat(eS,1,length(t)),'lineWidth',2);
  xlabel('Time (sec)', 'FontWeight','bold');
- ylabel('$\boldmath{e}$ (pu)'); 
+ ylabel('$\boldmath{e}-\boldmath{e}^s$ (pu)'); 
 axis([0 TFinal eyMin-eyOffSet eyMax+eyOffSet]);
 set(gca,'box','on');
 set(gca,'fontSize',22); 
 set(0,'defaulttextinterpreter','latex')
  grid on;
-title('Generator EMF'); 
+title('Generator EMF dev.'); 
   print -dpdf e.pdf
 print -depsc2 e
 
 
-myMin=min(min(mVec));
-myMax=max(max(mVec));
+myMin=min(min(mVec-repmat(mS,1,length(t))));
+myMax=max(max(mVec-repmat(mS,1,length(t))));
 myOffSet=0;
 Figure4=figure('Units','inches',...
 'Position',[figx0 figy0 width height],...
 'PaperPositionMode','auto');
 set(Figure4, 'Name', 'gene');
-plot(t,mVec,'lineWidth',2);
+plot(t,mVec-repmat(mS,1,length(t)),'lineWidth',2);
  xlabel('Time (sec)', 'FontWeight','bold');
- ylabel('$\boldmath{m}$ (pu)'); 
+ ylabel('$\boldmath{m}-\boldmath{m}^s$ (pu)'); 
 axis([0 TFinal myMin-myOffSet myMax+myOffSet]);
 set(gca,'box','on');
 set(gca,'fontSize',22); 
 set(0,'defaulttextinterpreter','latex')
  grid on;
-title('Generator mechanical input'); 
+title('Mechanical input dev.'); 
   print -dpdf m.pdf
 print -depsc2 m
 
@@ -155,43 +158,43 @@ print -depsc2 VoltageAngles
 
 
 
-pgyMin=min(min(pgVec));
-pgyMax=max(max(pgVec));
+pgyMin=min(min(pgVec-repmat(pgS,1,length(t))));
+pgyMax=max(max(pgVec-repmat(pgS,1,length(t))));
 pgyOffSet=0;
 Figure7=figure('Units','inches',...
 'Position',[figx0 figy0 width height],...
 'PaperPositionMode','auto');
 set(Figure7, 'Name', 'voltage angles');
-plot(t,pgVec,'lineWidth',2);
+plot(t,pgVec-repmat(pgS,1,length(t)),'lineWidth',2);
  xlabel('Time (sec)', 'FontWeight','bold');
- ylabel('$\boldmath{pg}$ (pu)'); 
+ ylabel('$\boldmath{p}_g-\boldmath{p}_g^s$ (pu)'); 
 axis([0 TFinal pgyMin-pgyOffSet pgyMax+pgyOffSet]);
 set(gca,'box','on');
 set(gca,'fontSize',22); 
 set(0,'defaulttextinterpreter','latex')
  grid on;
-title('Generators real electrical power output'); 
+title('Real  power output dev.'); 
   print -dpdf pg.pdf
 print -depsc2 pg
 
 
 
-qgyMin=min(min(qgVec));
-qgyMax=max(max(qgVec));
+qgyMin=min(min(qgVec-repmat(qgS,1,length(t))));
+qgyMax=max(max(qgVec-repmat(qgS,1,length(t))));
 qgyOffSet=0;
 Figure8=figure('Units','inches',...
 'Position',[figx0 figy0 width height],...
 'PaperPositionMode','auto');
 set(Figure8, 'Name', 'pg');
-plot(t,qgVec,'lineWidth',2);
+plot(t,qgVec-repmat(qgS,1,length(t)),'lineWidth',2);
  xlabel('Time (sec)', 'FontWeight','bold');
- ylabel('$\boldmath{qg}$ (pu)'); 
+ ylabel('$\boldmath{q}_g-\boldmath{q}_g^s$ (pu)'); 
 axis([0 TFinal qgyMin-qgyOffSet qgyMax+qgyOffSet]);
 set(gca,'box','on');
 set(gca,'fontSize',22); 
 set(0,'defaulttextinterpreter','latex')
  grid on;
-title('Generators reactive power output'); 
+title('Reactive power output dev'); 
   print -dpdf qg.pdf
 print -depsc2 qg
 
@@ -200,52 +203,51 @@ print -depsc2 qg
 
 
 
-prefyMin=min(min(prefVec));
-prefyMax=max(max(prefVec));
+prefyMin=min(min(prefVec-repmat(prefS,1,length(t))));
+prefyMax=max(max(prefVec-repmat(prefS,1,length(t))));
 prefyOffSet=0;
 Figure9=figure('Units','inches',...
 'Position',[figx0 figy0 width height],...
 'PaperPositionMode','auto');
 set(Figure9, 'Name', 'pg');
-plot(t,prefVec,'lineWidth',2);
+plot(t,prefVec-repmat(prefS,1,length(t)),'lineWidth',2);
  xlabel('Time (sec)', 'FontWeight','bold');
- ylabel('$\boldmath{pref}$ (pu)'); 
+ ylabel('$\boldmath{r}- \boldmath{r}^s$ (pu)'); 
 axis([0 TFinal prefyMin-prefyOffSet prefyMax+prefyOffSet]);
 set(gca,'box','on');
 set(gca,'fontSize',22); 
 set(0,'defaulttextinterpreter','latex')
  grid on;
-title('Generator  governor signal'); 
+title('Governor signal dev.'); 
   print -dpdf pref.pdf
 print -depsc2 pref
 
 
 
-fyMin=min(min(fVec));
-fyMax=max(max(fVec));
+fyMin=min(min(fVec-repmat(fS,1,length(t))));
+fyMax=max(max(fVec-repmat(fS,1,length(t))));
 fyOffSet=0;
 Figure10=figure('Units','inches',...
 'Position',[figx0 figy0 width height],...
 'PaperPositionMode','auto');
 set(Figure10, 'Name', 'pg');
-plot(t,fVec,'lineWidth',2);
+plot(t,fVec-repmat(fS,1,length(t)),'lineWidth',2);
  xlabel('Time (sec)', 'FontWeight','bold');
- ylabel('$\boldmath{f}$ (pu)'); 
+ ylabel('$\boldmath{f}-\boldmath{f}^s$ (pu)'); 
 axis([0 TFinal fyMin-fyOffSet fyMax+fyOffSet]);
 set(gca,'box','on');
 set(gca,'fontSize',22); 
 set(0,'defaulttextinterpreter','latex')
  grid on;
-title('Exciter field voltage'); 
+title('Exciter field voltage dev.'); 
   print -dpdf f.pdf
 print -depsc2 f
 
 
 
-   
-get(0, 'DefaultFigureVisible');
-set(0, 'DefaultFigureVisible', 'on');
+
 cd(CurrentDirectory);
+close all;
 end
 
 
