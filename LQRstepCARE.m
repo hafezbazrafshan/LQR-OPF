@@ -60,6 +60,7 @@ Rinv=speye(2*G);
 
 
 
+
 [RicattiS,EigValues,FeedBackGain]=care(Asys,Bsys,mldivide(Qinv,speye(size(Qinv))),mldivide(Rinv,speye(size(Rinv))));
 
 xS=[deltaS; omegaS; eS; mS];

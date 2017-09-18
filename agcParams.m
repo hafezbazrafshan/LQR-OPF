@@ -52,8 +52,8 @@ yDot=zeros(G,1);
         ACE(ii)=KPflow*( PMeasured(ii)-PScheduledS(ii,1))+ sum((1./FreqRVec(GensPerArea{ii,1})+...
             DVec(GensPerArea{ii,1}))).*mean(omega(GensPerArea{ii,1})-OMEGAS)./(2*pi);
 yDot(GensPerArea{ii,1})=KI*(-y(GensPerArea{ii,1})-KACE.*ACE(ii)+...
-    KSumPG.*sum(pgS(GensPerArea{ii,1}))+KPG.*(pgS(GensPerArea{ii,1})-pg(GensPerArea{ii,1})))+...
-    KThetaSlack*(thetaS(SlackIdx)-theta(SlackIdx));
+    KSumPG.*sum(pgS(GensPerArea{ii,1}))+KPG.*(pgS(GensPerArea{ii,1})-pg(GensPerArea{ii,1})));
+
        
 
 

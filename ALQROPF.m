@@ -102,7 +102,7 @@ deltaD(h6Idx)=-dqdlS;
 
 %% Alternate project-minimize algorithm
  % setting up maximum number of iterations and initial objectives
-MaxIt=5;
+MaxIt=2;
 ObjValue=-inf+zeros(MaxIt,1); 
 ZsVec=sparse(length([x0;a0;u0]),MaxIt);
 RiccatiSVec=sparse(16*(G^2),MaxIt);
@@ -147,6 +147,8 @@ deltaD==hx*(xs-x0)+ha*(as-a0);
 NetworkS.bus(:,13)<= vs<=NetworkS.bus(:,12);
 NetworkS.gen(:,5)./Sbase<=qgs<=NetworkS.gen(:,4)./Sbase;
 NetworkS.gen(:,10)./Sbase <= pgs <= NetworkS.gen(:,9)./Sbase; 
+
+
 
  % finds the slack bus
 thetas(SlackIdx)==theta0(SlackIdx);

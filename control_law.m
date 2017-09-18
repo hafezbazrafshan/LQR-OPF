@@ -28,6 +28,14 @@ global KLQRstep
 
 
 
+if strcmp(ControlMode,'AGC')
+global y0 y0Plus yS yDot0Plus yDotS yIdx...
+    ParticipationFactors NumberOfAreas AreaSet TieLineFromSet TieLineToSet...
+    ACE0Plus PScheduledS GensPerArea BusesPerArea...
+    KI KACE KPG KPflow KSumPG KThetaSlack
+
+end
+
 
                 
      switch ControlMode
@@ -56,7 +64,7 @@ global KLQRstep
               u=KLQRstep*[delta- deltaS; omega- omegaS; e-eS;m-mS]+[prefS;fS];
 %               f=KLQRstep(G+1:end,eIdx)*[e-eS]+fS;
 f=u(G+1:end);
-%              pref=zeros(G,1);
+             pref=zeros(G,1);
              for ii=1:NumberOfAreas
 %                  pref(GensPerArea{ii,1})=pref0(GensPerArea{ii,1})+0.5*(ParticipationFactors{ii}.*y(ii))+0.5*(pg(GensPerArea{ii,1})-pg0(GensPerArea{ii,1}));
 %   pref(GensPerArea{ii,1})=pref0(GensPerArea{ii,1})+1*(ParticipationFactors{ii}.*y(ii))+0*(pg(GensPerArea{ii,1})-pg0(GensPerArea{ii,1}));

@@ -47,7 +47,8 @@ SteadyStateMode=SsControl;
 % arguments. 
 
 % system constants [these do not change]
-global OMEGAS Sbase N G L NodeSet GenSet LoadSet YMat GMat BMat Cg...
+global OMEGAS Sbase N G L NodeSet GenSet LoadSet NodeLabels GenLabels LoadLabels...
+    YMat GMat BMat Cg...
     YffVec YftVec  YtfVec YttVec
 
 %  indices [these  do not change]
@@ -127,7 +128,7 @@ pause(PauseTime);
 disp('Populating steady-state network parameters');
 
 [ N,G,L,YMat, GMat, BMat,...
-    NodeSet, GenSet, LoadSet,...
+    NodeSet, GenSet, LoadSet,NodeLabels,GenLabels,LoadLabels,...
    Cg, YffVec, YftVec, YtfVec, YttVec] = networkParams( Network );
 
 
@@ -153,8 +154,12 @@ TieLineToSet=cell(NumberOfAreas,1);
 for ii=1:NumberOfAreas
     BusesPerArea{ii,1}=find(Network.bus(:,7)==AreaSet(ii)); 
     GensPerArea{ii,1}=find(Network.bus(GenSet,7)==AreaSet(ii));
-    TieLineFromSet{ii,1}= find(and(Network.bus(Network.branch(:,1),7)==AreaSet(ii),Network.bus(Network.branch(:,2),7)~=AreaSet(ii)));
-    TieLineToSet{ii,1}=find(and(Network.bus(Network.branch(:,1),7)~=AreaSet(ii),Network.bus(Network.branch(:,2),7)==AreaSet(ii)));
+%     TieLineFromSet{ii,1}= find(and(Network.bus(Network.branch(:,1),7)==AreaSet(ii),Network.bus(Network.branch(:,2),7)~=AreaSet(ii)));
+%     TieLineToSet{ii,1}=find(and(Network.bus(Network.branch(:,1),7)~=AreaSet(ii),Network.bus(Network.branch(:,2),7)==AreaSet(ii)));
+    TieLineFromSet{ii,1}= find(and(Network.bus(getNodeNumbersFromLabels(Network.branch(:,1) ),7)==AreaSet(ii),...
+        Network.bus(getNodeNumbersFromLabels(Network.branch(:,2) ),7)~=AreaSet(ii)));
+    TieLineToSet{ii,1}=find(and(Network.bus(getNodeNumbersFromLabels(Network.branch(:,1) ),7)~=AreaSet(ii),...
+        Network.bus(getNodeNumbersFromLabels(Network.branch(:,2) ),7)==AreaSet(ii)));
 end
 end
 
@@ -163,8 +168,8 @@ pause(PauseTime);
 
 %% 2.  Populating the initialized steady-state variables from the test case file:
 % we first run an opf to ensure problem is feasible with specified limits
-% Network.bus(:,3)=1.01*Network.bus(:,3);
-% Network.bus(:,4)=1.01*Network.bus(:,4);
+% Network.bus(:,3)=0.9*Network.bus(:,3);
+% Network.bus(:,4)=0.9*Network.bus(:,4);
 % Network.gen(:,9)=1.01*Network.gen(:,9);
 % Network.gen(:,4)=1.01*Network.gen(:,4);
 disp('Running initial load flow to obtain initial algebraic variables'); 
@@ -180,6 +185,10 @@ a0=[v0;theta0;pg0;qg0];
 
 % we increase the maximum limit on active and reactive power generation by
 % a little bit to ensure feasibility
+
+
+
+
 if sum(pg0.*Sbase>=Network.gen(:,9))>0
     Index=find(pg0.*Sbase>=Network.gen(:,9));
     Network.gen(Index,9)=1.01*pg0(Index)*Sbase;
@@ -243,9 +252,9 @@ else
         disp('Machine data not available, Synthetic data is used');
 
 TauVec=repmat(5,G,1);
-XdVec=repmat(0.9,G,1);
-XqVec=repmat(0.9,G,1);
-XprimeVec=repmat(0.06,G,1);
+XdVec=repmat(0.2,G,1);
+XqVec=repmat(0.2,G,1);
+XprimeVec=repmat(0.07,G,1);
 DVec=zeros(G,1);
 MVec=0.2*repmat(1,G,1);
     
@@ -342,6 +351,7 @@ NetworkS.bus(:,4)=qdS.*Sbase;
    disp([PreSuccessStr,'Successful']);
 pause(PauseTime);
  NetworkS.branch(:,[6 7 8])=0; % flow limits are set to zero
+
  %% 8. Setting LQR parameters
 % alpha=0.8;
 Tlqr=1000;
@@ -365,9 +375,10 @@ SsObjEst=[];
               LQROPF( delta0, omega0, e0, m0, v0, theta0, pg0, qg0, pref0, f0,...
     NetworkS,...
    pdS,qdS,pd0,qd0,Alpha); 
+%% SECTION TITLE
+% DESCRIPTIVE TEXT
 NetworkS.gen(:,6)=vgS;
-% NetworkS.gen(GenNonSlackSet,2)=pgSNonSlack.*Sbase;
-NetworkS.gen(:,2)=pgS.*Sbase;
+NetworkS.gen(GenNonSlackSet,2)=pgS(GenNonSlackSet).*Sbase;
 NetworkS.bus(NetworkS.bus(:,2)==3,9)=radians2degrees(thetaSSlack);
 [NetworkS,SuccessFlag]=runpf(NetworkS,MatPowerOptions);
          CompTime=toc(TStart);
@@ -378,8 +389,7 @@ NetworkS.bus(NetworkS.bus(:,2)==3,9)=radians2degrees(thetaSSlack);
     NetworkS,...
     pdS,qdS,pd0,qd0,Alpha); 
         NetworkS.gen(:,6)=vgS;
-% NetworkS.gen(GenNonSlackSet,2)=pgSNonSlack.*Sbase;
-NetworkS.gen(:,2)=pgS.*Sbase;
+NetworkS.gen(GenNonSlackSet,2)=pgS(GenNonSlackSet).*Sbase;
 NetworkS.bus(NetworkS.bus(:,2)==3,9)=radians2degrees(thetaSSlack);
 [NetworkS,SuccessFlag]=runpf(NetworkS,MatPowerOptions);
   CompTime=toc(TStart);
@@ -467,6 +477,9 @@ else
     pause(PauseTime);
 end
 
+
+
+
 %  12. Define the MASS matrix (The E matrix in $E\dot{x}$ descriptor systems)
 if strcmp(ControlMode,'LQR')
     Mass=zeros(length(x0)+length(a0), length(x0)+length(a0));
@@ -526,12 +539,21 @@ d0Plus(h6Idx)=-qdl0Plus;
 if N<250
     disp('Solving for the 0plus initial conditions using levenberg-marquardt');
 InitialOptions= optimoptions('fsolve','Display','Iter','Algorithm','levenberg-marquardt','InitDamping',0.5, 'ScaleProblem','jacobian',...
-    'SpecifyObjectiveGradient',true,'MaxIterations',50,'MaxFunctionEvaluations',50,'OptimalityTolerance',1e-6);
-
+    'SpecifyObjectiveGradient',true,'MaxIterations',100,'MaxFunctionEvaluations',200,'OptimalityTolerance',1e-6);
+% 
 [a0Plus,Res0Plus, exitflag]=fsolve(@( a) hTildeAlgebraicFunctionVectorized(...
     delta0Plus,omega0Plus,e0Plus,m0Plus, ...
     a(vIdx), a(thetaIdx), a(pgIdx), a(qgIdx),...
   d0Plus), [v0;theta0;pg0;qg0],InitialOptions);
+
+% [a10Plus,Res0Plus,exitflag]=fsolve(@(a1) hAlgebraic(delta0Plus,omega0Plus,e0Plus,m0Plus,...
+%     a1(1:N), a1(N+1:2*N), pd0Plus,qd0Plus), [v0;theta0], InitialOptions);
+
+
+% v0Plus=a10Plus(1:N); 
+% theta0Plus=a10Plus(N+1:2*N); 
+% 
+% [pg0Plus,qg0Plus]=computepgqg(delta0Plus,e0Plus,v0Plus,theta0Plus);
 
 
 v0Plus=a0Plus(vIdx);
@@ -557,11 +579,11 @@ end
 % theta0Plus=a0Plus(thetaIdx); 
 % pg0Plus=a0Plus(pgIdx); 
 % qg0Plus=a0Plus(qgIdx);
-% 
-% 
+
+
 % [ deltaDot0Plus, omegaDot0Plus, eDot0Plus, mDot0Plus ] = gTildeFunctionVectorized(...
 %     delta0Plus, omega0Plus, e0Plus,m0Plus,...
-%      v0Plus,theta0Plus,pg0Plus,qg0Plus);\
+%      v0Plus,theta0Plus,pg0Plus,qg0Plus);
 
 
 
@@ -570,7 +592,7 @@ if strcmp(ControlMode,'AGC')
      ParticipationFactors=cell(NumberOfAreas,1);
     y0Plus=zeros(G,1);
      PScheduledS=zeros(NumberOfAreas,1);
-     KI=1;
+     KI=1000;
      KACE=	1;
      KPG=0;
      KSumPG=1;
@@ -607,7 +629,7 @@ end
 ZDot0Plus=zeros(size(Znew0));
 ZDot0Plus([deltaIdx;omegaIdx;eIdx;mIdx])=[deltaDot0Plus;omegaDot0Plus;eDot0Plus;mDot0Plus];
 if strcmp(ControlMode,'AGC')
-    Znew0=[Znew0;yDot0Plus];
+    ZDot0Plus(mIdx(end)+qgIdx(end)+yIdx)=yDot0Plus;
 end
 DynamicSolverOptions.InitialSlope=ZDot0Plus;
 % 
@@ -647,8 +669,8 @@ disp('Retrieving output states, algebraic variables, and controls as a function 
 [deltaVec, omegaVec, eVec, mVec,...
     thetaVec, vVec, pgVec, qgVec, ...
     prefVec,fVec, ...
-    ploadVec, qloadVec,...
-    deltaDotVec, omegaDotVec, eDotVec, mDotVec] =...
+    ploadVec, qloadVec,yVec,...
+    deltaDotVec, omegaDotVec, eDotVec, mDotVec,ACEVec] =...
     retrieveOutput( t, ZNEW , NoiseVector); 
 
   disp([PreSuccessStr,'Successful']);
