@@ -3,7 +3,8 @@ clc;
 
 % CaseFiles={'case_illinois200','case1354pegase','case2383wp','case3012wp','case9241pegase'};
 % CaseFiles={'case3012wp'};
-CaseFiles={'case2869pegase'};
+% CaseFiles={'case2869pegase'};
+CaseFiles={'case9241pegase'}
 % CaseFiles={'case_illinois200'};
 % CaseFiles={'case57'};
 % CaseFiles={'case1354pegase'};
@@ -25,7 +26,7 @@ Tlqr=1000;
 if exist('Results')~=7
 mkdir('Results');
 end
-SaveName=['LargeNetworksSteadyStateProgressReport',num2str(Alpha*100),'Percent.txt'];
+SaveName=['Case9241SteadyStateProgressReport',num2str(Alpha*100),'Percent.txt'];
 FileID=fopen(['Results/',SaveName],'w'); 
 fprintf(FileID,'%-15s & %-15s & %-15s & %-15s & %-15s & %-15s & %-15s\n',...
     'Network', 'SsMethod','ObjValue', 'SsCost', 'StCostEst.','TotalCostEst.', 'CompTime');

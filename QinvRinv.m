@@ -9,8 +9,7 @@ global Sbase G omegaIdx deltaIdx eIdx mIdx prefIdx fIdx OMEGAS GenSlackIdx
 
 
 
-Qinv=eye(4*G); 
-Rinv=eye(2*G);
+
 % PIndices=setdiff(find(NetworkS.gen(:,9)>0),GenSlackIdx);
 % QIndices=setdiff(find(NetworkS.gen(:,4)>0),GenSlackIdx);
 PIndices=find(NetworkS.gen(:,9)>0);

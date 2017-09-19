@@ -195,8 +195,8 @@ else
         disp('Machine data not available, Synthetic data is used');
 
 TauVec=repmat(5,G,1);
-XdVec=repmat(0.7,G,1);
-XqVec=repmat(0.7,G,1);
+XdVec=repmat(0.2,G,1);
+XqVec=repmat(0.1,G,1);
 XprimeVec=repmat(0.07,G,1);
 DVec=zeros(G,1);
 MVec=0.2*repmat(1,G,1);

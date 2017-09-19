@@ -122,8 +122,8 @@ ModelingTime=0;
 
 %solve OPF with P0
 cvx_tic
-cvx_begin 
-cvx_solver mosek
+cvx_begin quiet
+cvx_solver SDPT3
 variables xs(4*G,1) as(2*N+2*G,1) us(2*G,1) 
 
 
@@ -203,8 +203,8 @@ if Alpha ~=0
 for ItNo=2:MaxIt
 
 cvx_tic
-cvx_begin 
-cvx_solver mosek
+cvx_begin quiet
+cvx_solver SDPT3
 variables xs(4*G,1) as(2*N+2*G,1) us(2*G,1) 
 
 
