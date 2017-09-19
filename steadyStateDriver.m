@@ -88,7 +88,7 @@ global  KLQRstep
 
 
 MatPowerOptions=mpoption('out.all',0); % this suppresses MATPOWER print output
-MatPowerOptions = mpoption('model', 'AC', 'pf.alg', 'NR', 'verbose', 0, 'out.all',0); 
+MatPowerOptions = mpoption('model', 'AC', 'pf.alg', 'NR', 'verbose', 0, 'out.all',0,'pf.enforce_q_lims',0); 
 
 %% 1.  Importing the test case
 disp(['Importing ', CaseFile]);
@@ -139,17 +139,15 @@ a0=[v0;theta0;pg0;qg0];
 
 if sum(pg0.*Sbase>=Network.gen(:,9))>0
     Index=find(pg0.*Sbase>=Network.gen(:,9));
-    Network.gen(Index,9)=1.01*pg0(Index)*Sbase;
+    Network.gen(Index,9)=1.1*pg0(Index)*Sbase;
 end
 
 if sum(qg0.*Sbase>=Network.gen(:,4))>0
     Index=find(qg0.*Sbase>Network.gen(:,4));
-    Network.gen(Index,4)=1.01*qg0(Index)*Sbase;
+    Network.gen(Index,4)=1.1*qg0(Index)*Sbase;
 end
 
-% if it's zero
-Network.gen(Network.gen(:,4)==0,4)=max(Network.gen(:,4));
-Network.gen(Network.gen(:,9)==0,9)=max(Network.gen(:,9));
+
 
 % Verifying the initial power flow solution:
  [checkpf, checkEqs,realGen_check, reactiveGen_check, ...
@@ -197,7 +195,7 @@ else
         disp('Machine data not available, Synthetic data is used');
 
 TauVec=repmat(5,G,1);
-XdVec=repmat(0.9,G,1);
+XdVec=repmat(0.7,G,1);
 XqVec=repmat(0.7,G,1);
 XprimeVec=repmat(0.07,G,1);
 DVec=zeros(G,1);

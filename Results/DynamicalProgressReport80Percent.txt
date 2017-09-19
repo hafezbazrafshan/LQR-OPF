@@ -21,20 +21,20 @@ case14wmac_con  & OPF              & 9127.35         & 661.60          & 9788.95
 ---------------------LQR-----------------
 Network         & SsMethod        & & SsCost          & StCost          & TotalCost.      & MaxFreqDev      & MaxVoltDev      
 case39wmac_con  & LQR-OPF          & 52871.28        & 4915.90         & 57787.18        & 0.0795          & 0.0951           
-case39wmac_con  & ALQR-OPF         & 52878.60        & 5283.65         & 58162.25        & 0.0795          & 0.1013           
+case39wmac_con  & ALQR-OPF         & 52878.58        & 5280.06         & 58158.64        & 0.0795          & 0.1013           
 case39wmac_con  & OPF              & 51386.02        & 20049.85        & 71435.87        & 0.1318          & 0.1215           
 ---------------------AGC-----------------
 Network         & SsMethod        & & SsCost          & StCost          & TotalCost.      & MaxFreqDev      & MaxVoltDev      
 case39wmac_con  & LQR-OPF          & 52871.28        & 7778.51         & 60649.79        & 0.0761          & 0.0805           
-case39wmac_con  & ALQR-OPF         & 52878.60        & 8250.01         & 61128.61        & 0.0761          & 0.0855           
+case39wmac_con  & ALQR-OPF         & 52878.58        & 8247.13         & 61125.71        & 0.0761          & 0.0855           
 case39wmac_con  & OPF              & 51386.02        & 26600.68        & 77986.70        & 0.1302          & 0.1107           
 ---------------------LQR-----------------
 Network         & SsMethod        & & SsCost          & StCost          & TotalCost.      & MaxFreqDev      & MaxVoltDev      
-case57          & LQR-OPF          & 49189.77        & 2312.20         & 51501.97        & 0.0328          & 0.0617           
-case57          & ALQR-OPF         & 49150.89        & 2348.25         & 51499.13        & 0.0329          & 0.0619           
-case57          & OPF              & 47199.75        & 14636.47        & 61836.21        & 0.0740          & 0.0614           
+case57          & LQR-OPF          & 50666.33        & 2449.10         & 53115.43        & 0.0294          & 0.0565           
+case57          & ALQR-OPF         & 50647.28        & 2477.10         & 53124.37        & 0.0294          & 0.0568           
+case57          & OPF              & 47199.75        & 39121.63        & 86321.37        & 0.0760          & 0.1107           
 ---------------------AGC-----------------
 Network         & SsMethod        & & SsCost          & StCost          & TotalCost.      & MaxFreqDev      & MaxVoltDev      
-case57          & LQR-OPF          & 49189.77        & 8144.57         & 57334.34        & 0.0293          & 0.0617           
-case57          & ALQR-OPF         & 49150.89        & 8225.40         & 57376.29        & 0.0294          & 0.0619           
-case57          & OPF              & 47199.75        & 38197.13        & 85396.88        & 0.0599          & 0.0614           
+case57          & LQR-OPF          & 50666.33        & 9940.54         & 60606.86        & 0.0287          & 0.0565           
+case57          & ALQR-OPF         & 50647.28        & 9908.95         & 60556.23        & 0.0286          & 0.0568           
+case57          & OPF              & 47199.75        & 116293.91       & 163493.66       & 0.0667          & 0.1129           

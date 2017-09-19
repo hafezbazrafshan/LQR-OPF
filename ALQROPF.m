@@ -120,11 +120,10 @@ ModelingTime=0;
 [Qinv,Rinv]=QinvRinv(pg0,qg0,Alpha, speye(4*G), speye(2*G),NetworkS); 
 [RiccatiS,EigValues,FeedBackGain,Report]=care(Asys,Bsys,mldivide(Qinv,speye(size(Qinv))),mldivide(Rinv,speye(size(Rinv))));
 
-
 %solve OPF with P0
 cvx_tic
 cvx_begin quiet
-cvx_solver mosek
+cvx_solver sedumi
 variables xs(4*G,1) as(2*N+2*G,1) us(2*G,1) 
 
 
