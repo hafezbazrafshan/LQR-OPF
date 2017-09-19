@@ -147,6 +147,9 @@ if sum(qg0.*Sbase>=Network.gen(:,4))>0
     Network.gen(Index,4)=1.01*qg0(Index)*Sbase;
 end
 
+% if it's zero
+Network.gen(Network.gen(:,4)==0,4)=max(Network.gen(:,4));
+Network.gen(Network.gen(:,9)==0,9)=max(Network.gen(:,9));
 
 % Verifying the initial power flow solution:
  [checkpf, checkEqs,realGen_check, reactiveGen_check, ...
@@ -194,11 +197,11 @@ else
         disp('Machine data not available, Synthetic data is used');
 
 TauVec=repmat(5,G,1);
-XdVec=repmat(0.7,G,1);
-XqVec=repmat(0.3,G,1);
-XprimeVec=repmat(0.06,G,1);
+XdVec=repmat(0.9,G,1);
+XqVec=repmat(0.7,G,1);
+XprimeVec=repmat(0.07,G,1);
 DVec=zeros(G,1);
-MVec=0.3*repmat(1,G,1);
+MVec=0.2*repmat(1,G,1);
     
 end
 
@@ -298,7 +301,7 @@ SsObjEst=[];
   
     case 'LQR-OPF'
                TStart=tic;
-         [vgS,pgS, thetaSSlack,SsObjEst, ~] = ...
+         [vgS,pgS, thetaSSlack,SsObjEst,ModelingTime, ~] = ...
               LQROPF( delta0, omega0, e0, m0, v0, theta0, pg0, qg0, pref0, f0,...
     NetworkS,...
    pdS,qdS,pd0,qd0,Alpha,Tlqr); 
@@ -308,10 +311,10 @@ NetworkS.gen(:,6)=vgS;
 NetworkS.gen(GenNonSlackSet,2)=pgS(GenNonSlackSet).*Sbase;
 NetworkS.bus(NetworkS.bus(:,2)==3,9)=radians2degrees(thetaSSlack);
 [NetworkS,SuccessFlag]=runpf(NetworkS,MatPowerOptions);
-         CompTime=toc(TStart);
+         CompTime=toc(TStart)-ModelingTime;
     case 'ALQR-OPF'
           TStart=tic;
-            [vgS,pgS, thetaSSlack,SsObjEst, ~] = ...
+            [vgS,pgS, thetaSSlack,SsObjEst,ModelingTime, ~] = ...
               ALQROPF( delta0, omega0, e0, m0, v0, theta0, pg0, qg0, pref0, f0,...
     NetworkS,...
     pdS,qdS,pd0,qd0,Alpha,Tlqr); 
@@ -319,7 +322,7 @@ NetworkS.bus(NetworkS.bus(:,2)==3,9)=radians2degrees(thetaSSlack);
 NetworkS.gen(GenNonSlackSet,2)=pgS(GenNonSlackSet).*Sbase;
 NetworkS.bus(NetworkS.bus(:,2)==3,9)=radians2degrees(thetaSSlack);
 [NetworkS,SuccessFlag]=runpf(NetworkS,MatPowerOptions);
-  CompTime=toc(TStart);
+  CompTime=toc(TStart)-ModelingTime;
     case 'DLQR-OPF'
 
 

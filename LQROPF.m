@@ -1,4 +1,4 @@
-function [vgS,pgS, thetaSSlack, SsObjEst, Gamma,K ] = LQROPF(...
+function [vgS,pgS, thetaSSlack, SsObjEst,ModelingTime, Gamma,K ] = LQROPF(...
     delta0, omega0, e0, m0,...
     v0,theta0, pg0, qg0, ...
     pref0, f0,...
@@ -98,7 +98,7 @@ deltaD(h5Idx)=-dpdlS;
 deltaD(h6Idx)=-dqdlS;
 
 
-
+cvx_tic
 cvx_begin quiet
 cvx_solver SDPT3
 variables xs(4*G,1) as(2*N+2*G,1) us(2*G,1)  Gamma
@@ -160,7 +160,8 @@ thetas(SlackIdx)==theta0(SlackIdx);
     
 
 cvx_end
-
+TimeElapse=cvx_toc;
+ModelingTime=TimeElapsed(3);
 
 
 K=-Rinv*Bsys.'*conj(inv(P));
