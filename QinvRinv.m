@@ -17,17 +17,17 @@ QIndices=find(NetworkS.gen(:,4)>0);
 
 
 Qinv(sub2ind([4*G,4*G], omegaIdx(PIndices), omegaIdx(PIndices)))=...
-    1*(1.2-alpha*pgS(PIndices)./(NetworkS.gen(PIndices,9)./Sbase));
+    1*(1-alpha*pgS(PIndices)./(NetworkS.gen(PIndices,9)./Sbase));
 Qinv(sub2ind([4*G,4*G], deltaIdx(PIndices), deltaIdx(PIndices))) =...
-    1*(1.2-alpha*pgS(PIndices)./(NetworkS.gen(PIndices,9)./Sbase));
+    1*(1-alpha*pgS(PIndices)./(NetworkS.gen(PIndices,9)./Sbase));
 Qinv(sub2ind([4*G, 4*G], eIdx(QIndices),eIdx(QIndices))) =...
-    1*(1.2-alpha*qgS(QIndices)./(NetworkS.gen(QIndices,4)./Sbase));
+    1*(1-alpha*qgS(QIndices)./(NetworkS.gen(QIndices,4)./Sbase));
 Qinv(sub2ind([4*G,4*G],mIdx(PIndices),mIdx(PIndices)))=...
-        1*(1.2-alpha*pgS(PIndices)./(NetworkS.gen(PIndices,9)./Sbase));
+        1*(1-alpha*pgS(PIndices)./(NetworkS.gen(PIndices,9)./Sbase));
 Rinv(sub2ind([2*G, 2*G], prefIdx(PIndices), prefIdx(PIndices)))  =...
-        1*(1.2-alpha*pgS(PIndices)./(NetworkS.gen(PIndices,9)./Sbase));
+        1*(1-alpha*pgS(PIndices)./(NetworkS.gen(PIndices,9)./Sbase));
 Rinv(sub2ind([2*G, 2*G], fIdx(QIndices), fIdx(QIndices))) =...
-        1*(1.2-alpha*qgS(QIndices)./(NetworkS.gen(QIndices,4)./Sbase));
+        1*(1-alpha*qgS(QIndices)./(NetworkS.gen(QIndices,4)./Sbase));
 
 % Qinv(sub2ind([4*G,4*G], omegaIdx(PIndices), omegaIdx(PIndices)))=...
 %    1+ alpha*abs(pgS(PIndices)./(NetworkS.gen(PIndices,9)./Sbase));

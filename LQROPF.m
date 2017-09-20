@@ -151,8 +151,6 @@ NetworkS.gen(:,10)./Sbase <= pgs <= NetworkS.gen(:,9)./Sbase;
 thetas(SlackIdx)==theta0(SlackIdx);
 % vs(SlackIdx)==v0(SlackIdx);
 
-sum(pgs)>=sum(pdS);
-sum(qgs)>=sum(qdS);
 
 -[-Gamma, xs.'-x0.'; xs-x0, -P] ==semidefinite(4*G+1);
 % 

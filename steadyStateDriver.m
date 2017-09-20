@@ -139,12 +139,12 @@ a0=[v0;theta0;pg0;qg0];
 
 if sum(pg0.*Sbase>=Network.gen(:,9))>0
     Index=find(pg0.*Sbase>=Network.gen(:,9));
-    Network.gen(Index,9)=1.1*pg0(Index)*Sbase;
+    Network.gen(Index,9)=1.01*pg0(Index)*Sbase;
 end
 
 if sum(qg0.*Sbase>=Network.gen(:,4))>0
     Index=find(qg0.*Sbase>Network.gen(:,4));
-    Network.gen(Index,4)=1.1*qg0(Index)*Sbase;
+    Network.gen(Index,4)=1.01*qg0(Index)*Sbase;
 end
 
 
