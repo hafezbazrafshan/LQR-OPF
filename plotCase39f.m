@@ -19,6 +19,8 @@ FigHandle=gca;
 set(FigHandle,'box','on');
 set(FigHandle,'fontSize',20); 
 set(FigHandle,'defaulttextinterpreter','latex');
+ytickformat(FigHandle,'%.2f'); 
+
 grid on;
 xlabel('Time (sec)', 'FontWeight','bold');
  ylabel('$\mathbf{f}-\mathbf{f}^\mathrm{eq}$ (pu)'); 
@@ -40,6 +42,7 @@ ZoomIndex = (t<=5) & (t>=0);
 plot(SubFigHandle,t(ZoomIndex),(LqrOpf.fVec(:,ZoomIndex)-repmat(LqrOpf.fS,1,length(t(ZoomIndex)))).') % plot on new axes
 axis(SubFigHandle,'tight'); 
 SubFigHandle.XTick= 0: 1: 5;
+ytickformat(SubFigHandle,'%.2f'); 
 
 set(SubFigHandle,'box','on');
 set(SubFigHandle,'fontSize',14); 
@@ -47,6 +50,8 @@ set(SubFigHandle,'defaulttextinterpreter','latex');
 SubFigHandle.TickLabelInterpreter='latex';
  SubFigHandle.XLabel.String='Time (sec)';
  SubFigHandle.YLabel.String='$\mathbf{f}-\mathbf{f}^\mathrm{eq}$ (pu)'; 
+ set(SubFigHandle,'XGrid','on'); 
+set(SubFigHandle,'YGrid','on'); 
  x=[0.22 0.15];
  y=[0.55 0.50];
  annotation('textarrow',x,y)
@@ -80,6 +85,8 @@ FigHandle=gca;
 set(FigHandle,'box','on');
 set(FigHandle,'fontSize',20); 
 set(FigHandle,'defaulttextinterpreter','latex');
+ytickformat(FigHandle,'%.2f'); 
+
 grid on;
 xlabel('Time (sec)', 'FontWeight','bold');
  ylabel('$\mathbf{f}-\mathbf{f}^\mathrm{eq}$ (pu)'); 
@@ -101,6 +108,7 @@ ZoomIndex = (t<=5) & (t>=0);
 plot(SubFigHandle,t(ZoomIndex),(ALqrOpf.fVec(:,ZoomIndex)-repmat(ALqrOpf.fS,1,length(t(ZoomIndex)))).') % plot on new axes
 axis(SubFigHandle,'tight'); 
 SubFigHandle.XTick= 0: 1: 5;
+ytickformat(SubFigHandle,'%.2f'); 
 
 set(SubFigHandle,'box','on');
 set(SubFigHandle,'fontSize',14); 
@@ -108,6 +116,8 @@ set(SubFigHandle,'defaulttextinterpreter','latex');
 SubFigHandle.TickLabelInterpreter='latex';
  SubFigHandle.XLabel.String='Time (sec)';
  SubFigHandle.YLabel.String='$\mathbf{f}-\mathbf{f}^\mathrm{eq}$ (pu)'; 
+ set(SubFigHandle,'XGrid','on'); 
+set(SubFigHandle,'YGrid','on'); 
  x=[0.22 0.15];
  y=[0.55 0.50];
  annotation('textarrow',x,y)
@@ -140,6 +150,8 @@ FigHandle=gca;
 set(FigHandle,'box','on');
 set(FigHandle,'fontSize',20); 
 set(FigHandle,'defaulttextinterpreter','latex');
+ytickformat(FigHandle,'%.2f'); 
+
 grid on;
 xlabel('Time (sec)', 'FontWeight','bold');
  ylabel('$\mathbf{f}-\mathbf{f}^\mathrm{eq}$ (pu)'); 
@@ -165,9 +177,13 @@ SubFigHandle.XTick= 0: 1: 5;
 set(SubFigHandle,'box','on');
 set(SubFigHandle,'fontSize',14); 
 set(SubFigHandle,'defaulttextinterpreter','latex');
+ytickformat(SubFigHandle,'%.2f'); 
+
 SubFigHandle.TickLabelInterpreter='latex';
  SubFigHandle.XLabel.String='Time (sec)';
  SubFigHandle.YLabel.String='$\mathbf{f}-\mathbf{f}^\mathrm{eq}$ (pu)'; 
+ set(SubFigHandle,'XGrid','on'); 
+set(SubFigHandle,'YGrid','on'); 
  x=[0.22 0.15];
  y=[0.55 0.50];
  annotation('textarrow',x,y)

@@ -19,12 +19,14 @@ FigHandle=gca;
 set(FigHandle,'box','on');
 set(FigHandle,'fontSize',20); 
 set(FigHandle,'defaulttextinterpreter','latex');
+FigHandle.TickLabelInterpreter='latex';
+ytickformat(FigHandle,'%.2f'); 
+
 grid on;
 xlabel('Time (sec)', 'FontWeight','bold');
  ylabel('$\mathbf{r}-\mathbf{r}^\mathrm{eq}$ (pu)'); 
   title('Governor reference signal');
 
-FigHandle.TickLabelInterpreter='latex';
 axis(FigHandle,[0 TFinal MyMin-MyOffSet MyMax+MyOffSet]);
 set(FigHandle,'YTick',floor(MyMin):1:ceil(MyMax));
  LegendText=cellstr([repmat('Gen. ', G,1),num2str([1:G].')]);
@@ -40,6 +42,7 @@ ZoomIndex = (t<=5) & (t>=0);
 plot(SubFigHandle,t(ZoomIndex),(LqrOpf.prefVec(:,ZoomIndex)-repmat(LqrOpf.prefS,1,length(t(ZoomIndex)))).') % plot on new axes
 axis(SubFigHandle,'tight'); 
 SubFigHandle.XTick= 0: 1: 5;
+ytickformat(SubFigHandle,'%.2f'); 
 
 set(SubFigHandle,'box','on');
 set(SubFigHandle,'fontSize',14); 
@@ -47,6 +50,8 @@ set(SubFigHandle,'defaulttextinterpreter','latex');
 SubFigHandle.TickLabelInterpreter='latex';
  SubFigHandle.XLabel.String='Time (sec)';
  SubFigHandle.YLabel.String='$\mathbf{r}-\mathbf{r}^\mathrm{eq}$ (pu)'; 
+ set(SubFigHandle,'XGrid','on'); 
+set(SubFigHandle,'YGrid','on'); 
  x=[0.22 0.15];
  y=[0.55 0.50];
  annotation('textarrow',x,y)
@@ -80,6 +85,8 @@ FigHandle=gca;
 set(FigHandle,'box','on');
 set(FigHandle,'fontSize',20); 
 set(FigHandle,'defaulttextinterpreter','latex');
+ytickformat(FigHandle,'%.2f'); 
+
 grid on;
 xlabel('Time (sec)', 'FontWeight','bold');
  ylabel('$\mathbf{r}-\mathbf{r}^\mathrm{eq}$ (pu)'); 
@@ -105,6 +112,9 @@ SubFigHandle.XTick= 0: 1: 5;
 set(SubFigHandle,'box','on');
 set(SubFigHandle,'fontSize',14); 
 set(SubFigHandle,'defaulttextinterpreter','latex');
+ytickformat(SubFigHandle,'%.2f'); 
+set(SubFigHandle,'XGrid','on'); 
+set(SubFigHandle,'YGrid','on'); 
 SubFigHandle.TickLabelInterpreter='latex';
  SubFigHandle.XLabel.String='Time (sec)';
  SubFigHandle.YLabel.String='$\mathbf{r}-\mathbf{r}^\mathrm{eq}$ (pu)'; 
@@ -140,6 +150,8 @@ FigHandle=gca;
 set(FigHandle,'box','on');
 set(FigHandle,'fontSize',20); 
 set(FigHandle,'defaulttextinterpreter','latex');
+ytickformat(FigHandle,'%.2f'); 
+
 grid on;
 xlabel('Time (sec)', 'FontWeight','bold');
  ylabel('$\mathbf{r}-\mathbf{r}^\mathrm{eq}$ (pu)'); 
@@ -161,6 +173,7 @@ ZoomIndex = (t<=5) & (t>=0);
 plot(SubFigHandle,t(ZoomIndex),(Opf.prefVec(:,ZoomIndex)-repmat(Opf.prefS,1,length(t(ZoomIndex)))).') % plot on new axes
 axis(SubFigHandle,'tight'); 
 SubFigHandle.XTick= 0: 1: 5;
+ytickformat(SubFigHandle,'%.2f'); 
 
 set(SubFigHandle,'box','on');
 set(SubFigHandle,'fontSize',14); 
@@ -168,6 +181,8 @@ set(SubFigHandle,'defaulttextinterpreter','latex');
 SubFigHandle.TickLabelInterpreter='latex';
  SubFigHandle.XLabel.String='Time (sec)';
  SubFigHandle.YLabel.String='$\mathbf{r}-\mathbf{r}^\mathrm{eq}$ (pu)'; 
+ set(SubFigHandle,'XGrid','on'); 
+set(SubFigHandle,'YGrid','on'); 
  x=[0.22 0.15];
  y=[0.55 0.50];
  annotation('textarrow',x,y)

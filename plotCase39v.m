@@ -19,6 +19,8 @@ FigHandle=gca;
 set(FigHandle,'box','on');
 set(FigHandle,'fontSize',20); 
 set(FigHandle,'defaulttextinterpreter','latex');
+ytickformat(FigHandle,'%.2f'); 
+
 grid on;
 xlabel('Time (sec)', 'FontWeight','bold');
  ylabel('$\mathbf{v}-\mathbf{v}^\mathrm{eq}$ (pu)'); 
@@ -60,6 +62,8 @@ FigHandle=gca;
 set(FigHandle,'box','on');
 set(FigHandle,'fontSize',20); 
 set(FigHandle,'defaulttextinterpreter','latex');
+ytickformat(FigHandle,'%.2f'); 
+
 grid on;
 xlabel('Time (sec)', 'FontWeight','bold');
  ylabel('$\mathbf{v}-\mathbf{v}^\mathrm{eq}$ (pu)'); 
@@ -100,6 +104,8 @@ FigHandle=gca;
 set(FigHandle,'box','on');
 set(FigHandle,'fontSize',20); 
 set(FigHandle,'defaulttextinterpreter','latex');
+ytickformat(FigHandle,'%.2f'); 
+
 grid on;
 xlabel('Time (sec)', 'FontWeight','bold');
  ylabel('$\mathbf{v}-\mathbf{v}^\mathrm{eq}$ (pu)'); 

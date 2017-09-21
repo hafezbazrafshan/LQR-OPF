@@ -16,11 +16,15 @@ Figure2=figure('Units','inches',...
 set(Figure2, 'Name', 'GenAngle');
 plot(t,radians2degrees(LqrOpf.deltaVec)-radians2degrees(repmat(LqrOpf.deltaS,1,length(t))),'lineWidth',2);
  xlabel('Time (sec)', 'FontWeight','bold');
- ylabel('$\boldmath{\delta}-\boldmath{\delta}^s$ (deg)'); 
+ ylabel('$\mathbf{\delta}-\mathbf{\delta}^{\mathrm{eq}}$ (deg)'); 
+FigHandle=gca;
+set(FigHandle,'box','on');
+set(FigHandle,'fontSize',20); 
+set(FigHandle,'defaulttextinterpreter','latex');
+FigHandle.TickLabelInterpreter='latex';
+ytickformat(FigHandle,'%.2f'); 
 axis([0 TFinal DeltayMin-DeltayOffSet DeltayMax+DeltayOffSet]);
-set(gca,'box','on');
-set(gca,'fontSize',22); 
-set(0,'defaulttextinterpreter','latex')
+
  grid on;
 title('Generator angle dev.'); 
 if exist('Figures')~=7
@@ -46,11 +50,14 @@ Figure2=figure('Units','inches',...
 set(Figure2, 'Name', 'GenAngle');
 plot(t,radians2degrees(ALqrOpf.deltaVec)-radians2degrees(repmat(ALqrOpf.deltaS,1,length(t))),'lineWidth',2);
  xlabel('Time (sec)', 'FontWeight','bold');
- ylabel('$\boldmath{\delta}-\boldmath{\delta}^s$ (deg)'); 
+ ylabel('$\boldmath{\delta}-\boldmath{\delta}^{\mathrm{eq}}$ (deg)'); 
+ FigHandle=gca;
+set(FigHandle,'box','on');
+set(FigHandle,'fontSize',20); 
+set(FigHandle,'defaulttextinterpreter','latex');
+FigHandle.TickLabelInterpreter='latex';
+ytickformat(FigHandle,'%.2f'); 
 axis([0 TFinal DeltayMin-DeltayOffSet DeltayMax+DeltayOffSet]);
-set(gca,'box','on');
-set(gca,'fontSize',22); 
-set(0,'defaulttextinterpreter','latex')
  grid on;
 title('Generator angle dev.'); 
 if exist('Figures')~=7
@@ -76,7 +83,13 @@ Figure2=figure('Units','inches',...
 set(Figure2, 'Name', 'GenAngle');
 plot(t,radians2degrees(Opf.deltaVec)-radians2degrees(repmat(Opf.deltaS,1,length(t))),'lineWidth',2);
  xlabel('Time (sec)', 'FontWeight','bold');
- ylabel('$\boldmath{\delta}-\boldmath{\delta}^s$ (deg)'); 
+ ylabel('$\boldmath{\delta}-\boldmath{\delta}^{\mathrm{eq}}$ (deg)'); 
+ FigHandle=gca;
+set(FigHandle,'box','on');
+set(FigHandle,'fontSize',20); 
+set(FigHandle,'defaulttextinterpreter','latex');
+FigHandle.TickLabelInterpreter='latex';
+ytickformat(FigHandle,'%.2f'); 
 axis([0 TFinal DeltayMin-DeltayOffSet DeltayMax+DeltayOffSet]);
 set(gca,'box','on');
 set(gca,'fontSize',22); 
