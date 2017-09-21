@@ -1,5 +1,6 @@
-function [vgS,pgS, thetaSSlack,SsObjEst, Gamma,K...
-  RiccatiSVec,KVec, SsCostVec,GammaVec,TrCostEstimateVec,ObjValue, ItSuccess] = ...
+function [vgS,pgS, thetaSSlack,SsObjEst,ModelingTime, Gamma,K...
+  RiccatiSVec,KVec, SsCostVec,GammaVec,TrCostEstimateVec,ObjValue,...
+   ItSuccess] = ...
    ALQROPF( delta0, omega0, e0, m0,...
     v0,theta0, pg0, qg0, ...
     pref0, f0,...
@@ -111,15 +112,16 @@ TrCostEstimateVec=sparse(1,MaxIt);
 GammaVec=sparse(1,MaxIt);
 KVec=sparse(2*G*4*G,MaxIt);
 
+tic
+ModelingTime=0;
 
 
 % solve CARE at z0
 [Qinv,Rinv]=QinvRinv(pg0,qg0,Alpha, speye(4*G), speye(2*G),NetworkS); 
 [RiccatiS,EigValues,FeedBackGain,Report]=care(Asys,Bsys,mldivide(Qinv,speye(size(Qinv))),mldivide(Rinv,speye(size(Rinv))));
 
-
-
 %solve OPF with P0
+cvx_tic
 cvx_begin quiet
 cvx_solver SDPT3
 variables xs(4*G,1) as(2*N+2*G,1) us(2*G,1) 
@@ -157,7 +159,8 @@ thetas(SlackIdx)==theta0(SlackIdx);
 
 
 cvx_end
-
+TimeElapsed=cvx_toc;
+ModelingTime=ModelingTime+TimeElapsed(3);
 
 % solve CARE at zS
 [Qinv,Rinv]=QinvRinv(pgs,qgs,Alpha, speye(4*G), speye(2*G),NetworkS); 
@@ -199,9 +202,9 @@ if Alpha ~=0
 
 for ItNo=2:MaxIt
 
-
+cvx_tic
 cvx_begin quiet
-cvx_solver sedumi
+cvx_solver SDPT3
 variables xs(4*G,1) as(2*N+2*G,1) us(2*G,1) 
 
 
@@ -235,6 +238,8 @@ thetas(SlackIdx)==theta0(SlackIdx);
 
 
 cvx_end
+TimeElapsed=cvx_toc;
+ModelingTime=ModelingTime+TimeElapsed(3);
 
 
 % solve CARE at previous zs

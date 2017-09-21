@@ -11,7 +11,7 @@ QRatio=0.0484;
 SsControlOptions={'LQR-OPF', 'ALQR-OPF','OPF'};
 SteadyStateOutput=cell(length(CaseFiles),length(SsControlOptions));
 % Coupling parameter
-Alpha=0.8;
+Alpha=0.6;
 
 % LQR time importance
 Tlqr=1000;

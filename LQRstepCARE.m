@@ -19,7 +19,7 @@ function [K, TrCostEstimate,Gamma, Asys, Bsys] = LQRstepCARE( deltaS, omegaS, eS
 % 3. alpha
 
 global OMEGAS Sbase N G L NodeSet GenSet LoadSet YMat GMat BMat Cg...
-    YffVec YftVec  YtfVec YttVec
+    YffVec YftVec  YtfVec YttVec 
 
 %  indices [these  do not change]
 global deltaIdx omegaIdx eIdx mIdx  ...

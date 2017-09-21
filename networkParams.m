@@ -31,7 +31,7 @@ function [ N,G,L,Ymat, Gmat, Bmat,...
 
 
 
-NodeLabels=network.bus(:,1); 
+NodeLabels=union(network.branch(:,1),network.branch(:,2)); 
 GenLabels=network.gen(:,1); 
 LoadLabels=setdiff(NodeLabels, GenLabels); 
 
