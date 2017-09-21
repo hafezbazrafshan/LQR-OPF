@@ -1,1 +1,2 @@
 Network         & SsMethod        & ObjValue        & SsCost          & StCostEst.      & TotalCostEst.   & CompTime       
+case_illinois200 & LQR-OPF         & 52731.74        & 48347.04        & 4090.34         & 52437.38        & 44070.98         
