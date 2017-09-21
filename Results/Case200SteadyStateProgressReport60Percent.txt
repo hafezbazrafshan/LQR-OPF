@@ -1,0 +1,3 @@
+Network         & SsMethod        & ObjValue        & SsCost          & StCostEst.      & TotalCostEst.   & CompTime       
+case_illinois200 & ALQR-OPF        & 54575.99        & 50349.65        & 2424.85         & 52774.50        & 2.92             
+case_illinois200 & OPF             &  & 48271.72        & 8724.08         & 56995.80        & 0.72             

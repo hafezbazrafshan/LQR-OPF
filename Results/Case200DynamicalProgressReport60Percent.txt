@@ -1,0 +1,8 @@
+---------------------LQR-----------------
+Network         & SsMethod        & & SsCost          & StCost          & TotalCost.      & MaxFreqDev      & MaxVoltDev      
+case_illinois200 & ALQR-OPF         & 50349.65        & 2526.84         & 52876.49        & 0.0199          & 0.0589           
+case_illinois200 & OPF              & 48271.72        & 9258.04         & 57529.76        & 0.0468          & 0.0745           
+---------------------AGC-----------------
+Network         & SsMethod        & & SsCost          & StCost          & TotalCost.      & MaxFreqDev      & MaxVoltDev      
+case_illinois200 & ALQR-OPF         & 50349.65        & 5667.92         & 56017.57        & 0.0168          & 0.0589           
+case_illinois200 & OPF              & 48271.72        & 14959.59        & 63231.30        & 0.0358          & 0.0741           
