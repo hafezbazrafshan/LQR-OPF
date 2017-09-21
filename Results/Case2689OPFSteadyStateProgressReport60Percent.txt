@@ -1,0 +1,2 @@
+Network         & SsMethod        & ObjValue        & SsCost          & StCostEst.      & TotalCostEst.   & CompTime       
+case2869pegase  & OPF             &  & 147865.36       & 14830044.90     & 14977910.26     & 3.25             

@@ -1,3 +1,0 @@
-Network         & SsMethod        & ObjValue        & SsCost          & StCostEst.      & TotalCostEst.   & CompTime       
-case1354pegase  & ALQR-OPF        & 93544.04        & 82564.97        & 2165442.32      & 2248007.29      & 152.72           
-case1354pegase  & OPF             &  & 81688.22        & 10109956.39     & 10191644.61     & 1.48             

@@ -2,9 +2,7 @@ clear all;
 clc;
 
 % CaseFiles={'case_illinois200','case1354pegase','case2383wp','case3012wp','case9241pegase'};
-% CaseFiles={'case3012wp'};
-% CaseFiles={'case2869pegase'};
-CaseFiles={'case9241pegase'}
+CaseFiles={'case2869pegase'};
 % CaseFiles={'case_illinois200'};
 % CaseFiles={'case57'};
 % CaseFiles={'case1354pegase'};
@@ -13,7 +11,7 @@ PRatio=0.1;
 QRatio=0.0484;
 
 
-SsControlOptions={'ALQR-OPF'};
+SsControlOptions={'OPF'};
 SteadyStateOutput=cell(length(CaseFiles),length(SsControlOptions));
 % Coupling parameter
 Alpha=0.6;
@@ -26,7 +24,7 @@ Tlqr=1000;
 if exist('Results')~=7
 mkdir('Results');
 end
-SaveName=['Case9241SteadyStateProgressReport',num2str(Alpha*100),'Percent.txt'];
+SaveName=['Case2689OPFSteadyStateProgressReport',num2str(Alpha*100),'Percent.txt'];
 FileID=fopen(['Results/',SaveName],'w'); 
 fprintf(FileID,'%-15s & %-15s & %-15s & %-15s & %-15s & %-15s & %-15s\n',...
     'Network', 'SsMethod','ObjValue', 'SsCost', 'StCostEst.','TotalCostEst.', 'CompTime');
