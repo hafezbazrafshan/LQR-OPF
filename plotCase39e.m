@@ -15,12 +15,16 @@ Figure2=figure('Units','inches',...
 'PaperPositionMode','auto');
 set(Figure2, 'Name', 'GenEMF');
 plot(t,LqrOpf.eVec-repmat(LqrOpf.eS,1,length(t)),'lineWidth',2);
+FigHandle=gca; 
+set(FigHandle,'box','on');
+set(FigHandle,'fontSize',20); 
+set(FigHandle,'defaulttextinterpreter','latex');
+FigHandle.TickLabelInterpreter='latex';
+ytickformat(FigHandle,'%.2f'); 
  xlabel('Time (sec)', 'FontWeight','bold');
  ylabel('$\boldmath{e}-\boldmath{e}^s$ (pu)'); 
 axis([0 TFinal eyMin-eyOffSet eyMax+eyOffSet]);
-set(gca,'box','on');
-set(gca,'fontSize',22); 
-set(0,'defaulttextinterpreter','latex')
+xlabel('Time (sec)', 'FontWeight','bold');
  grid on;
 title('Generator EMF dev.'); 
 if exist('Figures')~=7
@@ -28,8 +32,8 @@ if exist('Figures')~=7
  end
 
  cd('Figures'); 
-  print -dpdf Case39_LQROPF_alphapoint8_LQR_e.pdf
-print -depsc2 Case39_LQROPF_alphapoint8_LQR_e
+  print -dpdf Case39_LQROPF_alphapoint6_LQR_e.pdf
+print -depsc2 Case39_LQROPF_alphapoint6_LQR_e
 cd('..');
 
 
@@ -45,12 +49,15 @@ Figure2=figure('Units','inches',...
 'PaperPositionMode','auto');
 set(Figure2, 'Name', 'GenEMF');
 plot(t,ALqrOpf.eVec-repmat(ALqrOpf.eS,1,length(t)),'lineWidth',2);
+FigHandle=gca; 
+set(FigHandle,'box','on');
+set(FigHandle,'fontSize',20); 
+set(FigHandle,'defaulttextinterpreter','latex');
+FigHandle.TickLabelInterpreter='latex';
+ytickformat(FigHandle,'%.2f'); 
  xlabel('Time (sec)', 'FontWeight','bold');
  ylabel('$\boldmath{e}-\boldmath{e}^s$ (pu)'); 
 axis([0 TFinal eyMin-eyOffSet eyMax+eyOffSet]);
-set(gca,'box','on');
-set(gca,'fontSize',22); 
-set(0,'defaulttextinterpreter','latex')
  grid on;
 title('Generator EMF dev.'); 
 if exist('Figures')~=7
@@ -58,8 +65,8 @@ if exist('Figures')~=7
  end
 
  cd('Figures'); 
-  print -dpdf Case39_ALQROPF_alphapoint8_LQR_e.pdf
-print -depsc2 Case39_ALQROPF_alphapoint8_LQR_e
+  print -dpdf Case39_ALQROPF_alphapoint6_LQR_e.pdf
+print -depsc2 Case39_ALQROPF_alphapoint6_LQR_e
 cd('..');
 
 
@@ -75,12 +82,15 @@ Figure2=figure('Units','inches',...
 'PaperPositionMode','auto');
 set(Figure2, 'Name', 'GenEMF');
 plot(t,Opf.eVec-repmat(Opf.eS,1,length(t)),'lineWidth',2);
+FigHandle=gca; 
+set(FigHandle,'box','on');
+set(FigHandle,'fontSize',20); 
+set(FigHandle,'defaulttextinterpreter','latex');
+FigHandle.TickLabelInterpreter='latex';
+ytickformat(FigHandle,'%.2f'); 
  xlabel('Time (sec)', 'FontWeight','bold');
  ylabel('$\boldmath{e}-\boldmath{e}^s$ (pu)'); 
 axis([0 TFinal eyMin-eyOffSet eyMax+eyOffSet]);
-set(gca,'box','on');
-set(gca,'fontSize',22); 
-set(0,'defaulttextinterpreter','latex')
  grid on;
 title('Generator EMF dev.'); 
 if exist('Figures')~=7
@@ -88,8 +98,8 @@ if exist('Figures')~=7
  end
 
  cd('Figures'); 
-  print -dpdf Case39_OPF_alphapoint8_LQR_e.pdf
-print -depsc2 Case39_OPF_alphapoint8_LQR_e
+  print -dpdf Case39_OPF_alphapoint6_LQR_e.pdf
+print -depsc2 Case39_OPF_alphapoint6_LQR_e
 cd('..');
 
 

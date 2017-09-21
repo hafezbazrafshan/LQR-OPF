@@ -16,12 +16,14 @@ FigHandle=gca;
 set(FigHandle,'box','on');
 set(FigHandle,'fontSize',20); 
 set(FigHandle,'defaulttextinterpreter','latex');
+FigHandle.TickLabelInterpreter='latex';
+ytickformat(FigHandle,'%.2f'); 
+axis(FigHandle,[0 TFinal FreqyMin-FreqyOffSet FreqyMax+FreqyOffSet+0.1]);
+set(FigHandle,'YTick',floor(FreqyMin*100./5)*0.05:0.05:ceil(FreqyMax*100./5)*0.05);
 xlabel('Time (sec)', 'FontWeight','bold');
  ylabel('$\frac{1}{2\pi}\bf{\omega}$ (Hz)'); 
  title('Generator frequencies');
-FigHandle.TickLabelInterpreter='latex';
-axis(FigHandle,[0 TFinal FreqyMin-FreqyOffSet FreqyMax+FreqyOffSet+0.1]);
-set(FigHandle,'YTick',floor(FreqyMin*100./5)*0.05:0.05:ceil(FreqyMax*100./5)*0.05);
+
  LegendText=cellstr([repmat('Gen. ', G,1),num2str([1:G].')]);
  Lgd=legend(FigHandle,LegendText);
  Lgd.FontSize=12;
@@ -35,6 +37,8 @@ axis(SubFigHandle,'tight');
 SubFigHandle.XTick= 0: 1: 5;
 set(SubFigHandle,'XGrid','on'); 
 set(SubFigHandle,'YGrid','on'); 
+ytickformat(SubFigHandle,'%.2f'); 
+
 
 set(SubFigHandle,'box','on');
 set(SubFigHandle,'fontSize',14); 
@@ -52,8 +56,8 @@ SubFigHandle.TickLabelInterpreter='latex';
  end
 
  cd('Figures'); 
-  print -dpdf Case39_LQROPF_alphapoint8_LQR_freq.pdf
-print -depsc2 Case39_LQROPF_alphapoint8_LQR_freq
+  print -dpdf Case39_LQROPF_alphapoint6_LQR_freq.pdf
+print -depsc2 Case39_LQROPF_alphapoint6_LQR_freq
 cd('..');
 
 
@@ -80,6 +84,7 @@ xlabel('Time (sec)', 'FontWeight','bold');
 FigHandle.TickLabelInterpreter='latex';
 axis(FigHandle,[0 TFinal FreqyMin-FreqyOffSet FreqyMax+FreqyOffSet+0.1]);
 set(FigHandle,'YTick',floor(FreqyMin*100./5)*0.05:0.05:ceil(FreqyMax*100./5)*0.05);
+ytickformat(FigHandle,'%.2f'); 
  LegendText=cellstr([repmat('Gen. ', G,1),num2str([1:G].')]);
  Lgd=legend(FigHandle,LegendText);
  Lgd.FontSize=12;
@@ -93,6 +98,7 @@ axis(SubFigHandle,'tight');
 SubFigHandle.XTick= 0: 1: 5;
 set(SubFigHandle,'XGrid','on'); 
 set(SubFigHandle,'YGrid','on'); 
+ytickformat(SubFigHandle,'%.2f'); 
 
 set(SubFigHandle,'box','on');
 set(SubFigHandle,'fontSize',14); 
@@ -110,8 +116,8 @@ SubFigHandle.TickLabelInterpreter='latex';
  end
 
  cd('Figures'); 
-  print -dpdf Case39_ALQROPF_alphapoint8_LQR_freq.pdf
-print -depsc2 Case39_ALQROPF_alphapoint8_LQR_freq
+  print -dpdf Case39_ALQROPF_alphapoint6_LQR_freq.pdf
+print -depsc2 Case39_ALQROPF_alphapoint6_LQR_freq
 cd('..');
 
 
@@ -136,6 +142,7 @@ xlabel('Time (sec)', 'FontWeight','bold');
 FigHandle.TickLabelInterpreter='latex';
 axis(FigHandle,[0 TFinal FreqyMin-FreqyOffSet FreqyMax+FreqyOffSet+0.1]);
 set(FigHandle,'YTick',floor(FreqyMin*100./5)*0.05:0.05:ceil(FreqyMax*100./5)*0.05);
+ytickformat(FigHandle,'%.2f'); 
  LegendText=cellstr([repmat('Gen. ', G,1),num2str([1:G].')]);
  Lgd=legend(FigHandle,LegendText);
  Lgd.FontSize=12;
@@ -149,6 +156,7 @@ axis(SubFigHandle,'tight');
 SubFigHandle.XTick= 0: 1: 5;
 set(SubFigHandle,'XGrid','on'); 
 set(SubFigHandle,'YGrid','on'); 
+ytickformat(SubFigHandle,'%.2f'); 
 
 set(SubFigHandle,'box','on');
 set(SubFigHandle,'fontSize',14); 
@@ -166,6 +174,6 @@ SubFigHandle.TickLabelInterpreter='latex';
  end
 
  cd('Figures'); 
-  print -dpdf Case39_OPF_alphapoint8_LQR_freq.pdf
-print -depsc2 Case39_OPF_alphapoint8_LQR_freq
+  print -dpdf Case39_OPF_alphapoint6_LQR_freq.pdf
+print -depsc2 Case39_OPF_alphapoint6_LQR_freq
 cd('..');
