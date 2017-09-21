@@ -59,8 +59,8 @@ SubFigHandle.TickLabelInterpreter='latex';
  end
 
  cd('Figures'); 
-  print -dpdf Case39_LQROPF_alphapoint8_LQR_r.pdf
-print -depsc2 Case39_LQROPF_alphapoint8_LQR_r
+  print -dpdf Case39_LQROPF_alphapoint6_LQR_r.pdf
+print -depsc2 Case39_LQROPF_alphapoint6_LQR_r
 cd('..');
 
 
@@ -120,8 +120,8 @@ SubFigHandle.TickLabelInterpreter='latex';
  end
 
  cd('Figures'); 
-  print -dpdf Case39_ALQROPF_alphapoint8_LQR_r.pdf
-print -depsc2 Case39_ALQROPF_alphapoint8_LQR_r
+  print -dpdf Case39_ALQROPF_alphapoint6_LQR_r.pdf
+print -depsc2 Case39_ALQROPF_alphapoint6_LQR_r
 cd('..');
 
 %% mech plots
@@ -180,8 +180,8 @@ SubFigHandle.TickLabelInterpreter='latex';
  end
 
  cd('Figures'); 
-  print -dpdf Case39_OPF_alphapoint8_LQR_r.pdf
-print -depsc2 Case39_OPF_alphapoint8_LQR_r
+  print -dpdf Case39_OPF_alphapoint6_LQR_r.pdf
+print -depsc2 Case39_OPF_alphapoint6_LQR_r
 cd('..');
 
 

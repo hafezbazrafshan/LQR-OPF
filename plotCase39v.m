@@ -39,8 +39,8 @@ set(FigHandle,'YTick',floor(MyMin):0.05:ceil(MyMax));
  end
 
  cd('Figures'); 
-  print -dpdf Case39_LQROPF_alphapoint8_LQR_v.pdf
-print -depsc2 Case39_LQROPF_alphapoint8_LQR_v
+  print -dpdf Case39_LQROPF_alphapoint6_LQR_v.pdf
+print -depsc2 Case39_LQROPF_alphapoint6_LQR_v
 cd('..');
 
 
@@ -80,8 +80,8 @@ set(FigHandle,'YTick',floor(MyMin):0.05:ceil(MyMax));
  end
 
  cd('Figures'); 
-  print -dpdf Case39_ALQROPF_alphapoint8_LQR_v.pdf
-print -depsc2 Case39_ALQROPF_alphapoint8_LQR_v
+  print -dpdf Case39_ALQROPF_alphapoint6_LQR_v.pdf
+print -depsc2 Case39_ALQROPF_alphapoint6_LQR_v
 cd('..');
 
 %% mech plots
@@ -120,8 +120,8 @@ set(FigHandle,'YTick',floor(MyMin):0.05:ceil(MyMax));
  end
 
  cd('Figures'); 
-  print -dpdf Case39_OPF_alphapoint8_LQR_v.pdf
-print -depsc2 Case39_OPF_alphapoint8_LQR_v
+  print -dpdf Case39_OPF_alphapoint6_LQR_v.pdf
+print -depsc2 Case39_OPF_alphapoint6_LQR_v
 cd('..');
 
 

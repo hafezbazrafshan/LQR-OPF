@@ -28,8 +28,8 @@ if exist('Figures')~=7
  end
 
  cd('Figures'); 
-  print -dpdf Case39_LQROPF_alphapoint8_LQR_delta.pdf
-print -depsc2 Case39_LQROPF_alphapoint8_LQR_delta
+  print -dpdf Case39_LQROPF_alphapoint6_LQR_delta.pdf
+print -depsc2 Case39_LQROPF_alphapoint6_LQR_delta
 cd('..');
 
 
@@ -58,8 +58,8 @@ if exist('Figures')~=7
  end
 
  cd('Figures'); 
-  print -dpdf Case39_ALQROPF_alphapoint8_LQR_delta.pdf
-print -depsc2 Case39_ALQROPF_alphapoint8_LQR_delta
+  print -dpdf Case39_ALQROPF_alphapoint6_LQR_delta.pdf
+print -depsc2 Case39_ALQROPF_alphapoint6_LQR_delta
 cd('..');
 
 
@@ -88,8 +88,8 @@ if exist('Figures')~=7
  end
 
  cd('Figures'); 
-  print -dpdf Case39_OPF_alphapoint8_LQR_delta.pdf
-print -depsc2 Case39_OPF_alphapoint8_LQR_delta
+  print -dpdf Case39_OPF_alphapoint6_LQR_delta.pdf
+print -depsc2 Case39_OPF_alphapoint6_LQR_delta
 cd('..');
 
 

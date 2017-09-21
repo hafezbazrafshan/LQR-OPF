@@ -20,11 +20,19 @@ set(FigHandle,'box','on');
 set(FigHandle,'fontSize',20); 
 set(FigHandle,'defaulttextinterpreter','latex');
 FigHandle.TickLabelInterpreter='latex';
+<<<<<<< HEAD
 ytickformat(FigHandle,'%.2f'); 
+ xlabel('Time (sec)', 'FontWeight','bold');
+ ylabel('$\boldmath{e}-\boldmath{e}^s$ (pu)'); 
+axis([0 TFinal eyMin-eyOffSet eyMax+eyOffSet]);
+xlabel('Time (sec)', 'FontWeight','bold');
+ grid on;
+=======
  xlabel('Time (sec)', 'FontWeight','bold');
  ylabel('$\mathbf{e}-\mathbf{e}^s$ (pu)'); 
 axis(FigHandle,[0 TFinal eyMin-eyOffSet eyMax+eyOffSet]);
 grid on;
+>>>>>>> 86d15c4ceee738ac1c38f4cf38759997b807db79
 title('Generator EMF dev.'); 
 if exist('Figures')~=7
     mkdir('Figures'); 
@@ -53,11 +61,18 @@ set(FigHandle,'box','on');
 set(FigHandle,'fontSize',20); 
 set(FigHandle,'defaulttextinterpreter','latex');
 FigHandle.TickLabelInterpreter='latex';
+<<<<<<< HEAD
 ytickformat(FigHandle,'%.2f'); 
+ xlabel('Time (sec)', 'FontWeight','bold');
+ ylabel('$\boldmath{e}-\boldmath{e}^s$ (pu)'); 
+axis([0 TFinal eyMin-eyOffSet eyMax+eyOffSet]);
+ grid on;
+=======
  xlabel('Time (sec)', 'FontWeight','bold');
  ylabel('$\mathbf{e}-\mathbf{e}^s$ (pu)'); 
 axis(FigHandle,[0 TFinal eyMin-eyOffSet eyMax+eyOffSet]);
 grid on;
+>>>>>>> 86d15c4ceee738ac1c38f4cf38759997b807db79
 title('Generator EMF dev.'); 
 if exist('Figures')~=7
     mkdir('Figures'); 
@@ -89,8 +104,13 @@ FigHandle.TickLabelInterpreter='latex';
 
 ytickformat(FigHandle,'%.2f'); 
  xlabel('Time (sec)', 'FontWeight','bold');
+ ylabel('$\boldmath{e}-\boldmath{e}^s$ (pu)'); 
+axis([0 TFinal eyMin-eyOffSet eyMax+eyOffSet]);
+
+ xlabel('Time (sec)', 'FontWeight','bold');
  ylabel('$\mathbf{e}-\mathbf{e}^s$ (pu)'); 
 axis(FigHandle,[0 TFinal eyMin-eyOffSet eyMax+eyOffSet]);
+>>>>>>> 86d15c4ceee738ac1c38f4cf38759997b807db79
  grid on;
 title('Generator EMF dev.'); 
 if exist('Figures')~=7
