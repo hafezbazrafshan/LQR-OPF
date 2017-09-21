@@ -48,6 +48,8 @@ set(SubFigHandle,'defaulttextinterpreter','latex');
 SubFigHandle.TickLabelInterpreter='latex';
  SubFigHandle.XLabel.String='Time (sec)';
  SubFigHandle.YLabel.String='$\mathbf{m}-\mathbf{m}^\mathrm{eq}$ (pu)'; 
+ set(SubFigHandle,'XGrid','on'); 
+set(SubFigHandle,'YGrid','on'); 
  x=[0.22 0.15];
  y=[0.55 0.60];
  annotation('textarrow',x,y)
@@ -111,6 +113,8 @@ set(SubFigHandle,'defaulttextinterpreter','latex');
 SubFigHandle.TickLabelInterpreter='latex';
  SubFigHandle.XLabel.String='Time (sec)';
  SubFigHandle.YLabel.String='$\mathbf{m}-\mathbf{m}^\mathrm{eq}$ (pu)'; 
+ set(SubFigHandle,'XGrid','on'); 
+set(SubFigHandle,'YGrid','on'); 
  x=[0.22 0.15];
  y=[0.55 0.60];
  annotation('textarrow',x,y)
@@ -174,6 +178,8 @@ set(SubFigHandle,'defaulttextinterpreter','latex');
 SubFigHandle.TickLabelInterpreter='latex';
  SubFigHandle.XLabel.String='Time (sec)';
  SubFigHandle.YLabel.String='$\mathbf{m}-\mathbf{m}^\mathrm{eq}$ (pu)'; 
+ set(SubFigHandle,'XGrid','on'); 
+set(SubFigHandle,'YGrid','on'); 
  x=[0.22 0.15];
  y=[0.55 0.60];
  annotation('textarrow',x,y)
