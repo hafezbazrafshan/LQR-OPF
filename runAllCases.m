@@ -1,8 +1,6 @@
 clear all;
 clc;
 CaseFiles={'case9wmac_con', 'case14wmac_con','case39wmac_con','case57'};
-% CaseFiles={'case9wmac_con','case14wmac_con'};
-% CaseFiles={'case_illinois200'};
 % Perturbation
 PRatio=0.1; 
 QRatio=0.0484;

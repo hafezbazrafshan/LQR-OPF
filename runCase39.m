@@ -3,7 +3,7 @@ clc;
 casefile='case39wmac_con';
 
 % Coupling parameter
-Alpha=0.8;
+Alpha=0.6;
 
 % LQR time importance
 Tlqr=1000;
@@ -12,7 +12,6 @@ Tlqr=1000;
 LfControl='AGC';
 
 StControlOptions={'LQR-OPF', 'ALQR-OPF','OPF'};
-% StControlOptions={'OPF','LQR-OPF'};
 
 
 

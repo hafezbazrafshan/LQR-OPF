@@ -1,0 +1,11 @@
+Network         & SsMethod        & Alpha           & ObjValue        & SsCost          & StCostEst.      & TotalCostEst.   & CompTime       
+case39wmac_con  & LQR-OPF         & 0.00            & 54366.00        & 52781.45        & 1467.86         & 54249.31        & 16.54            
+case39wmac_con  & OPF             & 0.00            &  & 51386.02        & 6419.45         & 57805.48        & 0.47             
+case39wmac_con  & LQR-OPF         & 0.20            & 54612.22        & 52868.04        & 1612.82         & 54480.86        & 16.09            
+case39wmac_con  & OPF             & 0.20            &  & 51386.02        & 7654.99         & 59041.02        & 0.22             
+case39wmac_con  & LQR-OPF         & 0.40            & 54966.28        & 52870.56        & 1930.98         & 54801.54        & 16.10            
+case39wmac_con  & OPF             & 0.40            &  & 51386.02        & 9488.20         & 60874.22        & 0.18             
+case39wmac_con  & LQR-OPF         & 0.60            & 55560.94        & 52872.28        & 2471.68         & 55343.95        & 16.73            
+case39wmac_con  & OPF             & 0.60            &  & 51386.02        & 12504.70        & 63890.72        & 0.18             
+case39wmac_con  & LQR-OPF         & 0.80            & 56976.50        & 52871.28        & 3808.46         & 56679.74        & 19.57            
+case39wmac_con  & OPF             & 0.80            &  & 51386.02        & 18519.21        & 69905.23        & 0.25             
