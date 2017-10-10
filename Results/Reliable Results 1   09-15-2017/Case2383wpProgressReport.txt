@@ -1,0 +1,3 @@
+Network         & SsMethod        & ObjValue        & SsCost          & StCostEst.      & TotalCostEst.   & CompTime       
+case2383wp      & OPF             &  & 2217287.26      & 123999.80       & 2341287.06      & 9.86             
+case2383wp      & ALQR-OPF        & 2252189.59      & 2235711.00      & 21174.52        & 2256885.51      & 325.72           
